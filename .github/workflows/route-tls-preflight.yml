@@ -1,0 +1,38 @@
+name: Verify public OpenShift Route TLS
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  verify-route:
+    name: Verify Route from a GitHub-hosted runner
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    environment:
+      name: ocp-poc
+      url: ${{ vars.APP_BASE_URL }}
+
+    steps:
+      - name: Verify public TLS and OpenAPI
+        shell: bash
+        env:
+          APP_BASE_URL: ${{ vars.APP_BASE_URL }}
+        run: |
+          set -Eeuo pipefail
+
+          : "${APP_BASE_URL:?APP_BASE_URL is missing}"
+
+          curl \
+            --fail \
+            --silent \
+            --show-error \
+            --retry 6 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            "${APP_BASE_URL}/v3/api-docs" \
+            | jq -e '.paths | length > 0' >/dev/null
+
+          echo "Public Route TLS and OpenAPI are trusted by the GitHub-hosted runner"

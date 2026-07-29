@@ -1,0 +1,8 @@
+name: bamoe-customer-rule-poc
+
+services:
+  maven-repository:
+    image: quay.io/bamoe/maven-repository:9.5.0-ibm-0005
+    platform: linux/amd64
+    ports:
+      - "127.0.0.1:10099:8080"

@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - path: license.yaml
+images:
+  - name: customer-rule-poc
+    newName: ghcr.io/jihunkeom/customer-rule-poc
+    newTag: DO_NOT_APPLY_SET_IMMUTABLE_REF
+  - name: customer-rule-mock
+    newName: ghcr.io/jihunkeom/customer-rule-mock
+    newTag: DO_NOT_APPLY_SET_IMMUTABLE_REF

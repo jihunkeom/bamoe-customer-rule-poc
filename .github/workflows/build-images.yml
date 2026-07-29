@@ -1,0 +1,284 @@
+name: Build and publish PoC images
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: customer-rule-poc-main-deployment
+  cancel-in-progress: false
+
+env:
+  BAMOE_VERSION: 9.5.0-ibm-0005
+  APP_IMAGE: ghcr.io/${{ github.repository_owner }}/customer-rule-poc
+  MOCK_IMAGE: ghcr.io/${{ github.repository_owner }}/customer-rule-mock
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      app_digest: ${{ steps.build_app.outputs.digest }}
+      mock_digest: ${{ steps.build_mock.outputs.digest }}
+    services:
+      bamoe-maven-repository:
+        image: quay.io/bamoe/maven-repository:9.5.0-ibm-0005
+        ports:
+          - 10099:8080
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Wait for BAMOE Maven repository
+        shell: bash
+        run: |
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:10099/ >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "BAMOE Maven repository did not become ready" >&2
+          exit 1
+
+      - name: Test and package
+        run: >-
+          mvn
+          -s config/settings-bamoe-ci.xml
+          -B -ntp clean verify
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push application image
+        id: build_app
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Containerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.APP_IMAGE }}:latest
+            ${{ env.APP_IMAGE }}:sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Build and push mock image
+        id: build_mock
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: mock-server/Containerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.MOCK_IMAGE }}:latest
+            ${{ env.MOCK_IMAGE }}:sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+  deploy:
+    name: Deploy immutable images to OpenShift
+    needs: build
+    if: github.ref == 'refs/heads/main' && vars.OCP_AUTO_DEPLOY == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+
+    environment:
+      name: ocp-poc
+      url: ${{ vars.APP_BASE_URL }}
+
+    steps:
+      - name: Install OpenShift CLI
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: ${{ vars.OPENSHIFT_OC_VERSION }}
+
+      - name: Log in to OpenShift
+        uses: redhat-actions/oc-login@v2
+        with:
+          openshift_server_url: ${{ vars.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          certificate_authority_data: ${{ secrets.OPENSHIFT_CA_DATA }}
+          namespace: ${{ vars.OPENSHIFT_NAMESPACE }}
+
+      - name: Deploy immutable images
+        shell: bash
+        env:
+          APP_IMAGE: ghcr.io/${{ github.repository_owner }}/customer-rule-poc
+          MOCK_IMAGE: ghcr.io/${{ github.repository_owner }}/customer-rule-mock
+          APP_DIGEST: ${{ needs.build.outputs.app_digest }}
+          MOCK_DIGEST: ${{ needs.build.outputs.mock_digest }}
+          APP_BASE_URL: ${{ vars.APP_BASE_URL }}
+        run: |
+          set -Eeuo pipefail
+
+          : "${APP_DIGEST:?Application digest is missing}"
+          : "${MOCK_DIGEST:?Mock digest is missing}"
+          : "${APP_BASE_URL:?APP_BASE_URL is missing}"
+
+          if [[ ! "$APP_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]] \
+            || [[ ! "$MOCK_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "::error::Build outputs are not full sha256 image digests"
+            exit 1
+          fi
+
+          app_ref="${APP_IMAGE}:sha-${GITHUB_SHA}@${APP_DIGEST}"
+          mock_ref="${MOCK_IMAGE}:sha-${GITHUB_SHA}@${MOCK_DIGEST}"
+
+          previous_app="$(
+            oc get deployment/customer-rule-poc \
+              -o jsonpath='{.spec.template.spec.containers[?(@.name=="application")].image}'
+          )"
+
+          previous_mock="$(
+            oc get deployment/customer-rule-mock \
+              -o jsonpath='{.spec.template.spec.containers[?(@.name=="mock")].image}'
+          )"
+
+          : "${previous_app:?Current application image was not found}"
+          : "${previous_mock:?Current mock image was not found}"
+
+          previous_app_suffix="${previous_app#"${APP_IMAGE}:sha-"}"
+          previous_app_sha="${previous_app_suffix%@sha256:*}"
+          previous_app_digest="${previous_app_suffix##*@sha256:}"
+
+          previous_mock_suffix="${previous_mock#"${MOCK_IMAGE}:sha-"}"
+          previous_mock_sha="${previous_mock_suffix%@sha256:*}"
+          previous_mock_digest="${previous_mock_suffix##*@sha256:}"
+
+          if [[ "$previous_app" != \
+            "${APP_IMAGE}:sha-${previous_app_sha}@sha256:${previous_app_digest}" ]] \
+            || [[ ! "$previous_app_sha" =~ ^[0-9a-f]{40}$ ]] \
+            || [[ ! "$previous_app_digest" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "::error::Current application image is not an approved immutable sha-<commit>@sha256:<digest> reference"
+            exit 1
+          fi
+
+          if [[ "$previous_mock" != \
+            "${MOCK_IMAGE}:sha-${previous_mock_sha}@sha256:${previous_mock_digest}" ]] \
+            || [[ ! "$previous_mock_sha" =~ ^[0-9a-f]{40}$ ]] \
+            || [[ ! "$previous_mock_digest" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "::error::Current mock image is not an approved immutable sha-<commit>@sha256:<digest> reference"
+            exit 1
+          fi
+
+          if [[ "$previous_app_sha" != "$previous_mock_sha" ]]; then
+            echo "::error::Current application and mock images do not come from the same commit"
+            exit 1
+          fi
+
+          rollback() {
+            status=$?
+            trap - ERR
+
+            echo "::warning::Deployment failed; restoring previous images"
+
+            oc set image deployment/customer-rule-poc \
+              "application=${previous_app}" || true
+
+            oc set image deployment/customer-rule-mock \
+              "mock=${previous_mock}" || true
+
+            oc rollout status deployment/customer-rule-mock \
+              --timeout=3m || true
+
+            oc rollout status deployment/customer-rule-poc \
+              --timeout=5m || true
+
+            exit "$status"
+          }
+
+          trap rollback ERR
+
+          oc set image deployment/customer-rule-mock \
+            "mock=${mock_ref}"
+
+          oc rollout status deployment/customer-rule-mock \
+            --timeout=3m
+
+          oc set image deployment/customer-rule-poc \
+            "application=${app_ref}"
+
+          oc rollout status deployment/customer-rule-poc \
+            --timeout=5m
+
+          curl \
+            --fail \
+            --silent \
+            --show-error \
+            --retry 12 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            "${APP_BASE_URL}/v3/api-docs" \
+            | jq -e '.paths | length > 0' >/dev/null
+
+          case04_request_id="GHA-C04-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          case04_payload="$(
+            jq -n \
+              --arg requestId "$case04_request_id" \
+              '{
+                requestId: $requestId,
+                customerId: "C001",
+                mockScenario: "FALLBACK_GRANTED"
+              }'
+          )"
+
+          case04_response="$(
+            curl \
+              --fail-with-body \
+              --silent \
+              --show-error \
+              --connect-timeout 10 \
+              --max-time 60 \
+              -X POST \
+              "${APP_BASE_URL}/Case04FallbackProcess" \
+              -H 'Content-Type: application/json' \
+              -H 'Accept: application/json' \
+              --data "$case04_payload"
+          )"
+
+          printf '%s\n' "$case04_response" \
+            | jq -e '
+                .processResponse.executionState == "COMPLETED"
+                and .processResponse.policyEvaluationCount == 2
+                and .processResponse.policyResult.status == "ALLOW"
+                and .processResponse.policyResult.reasonCode
+                  == "FALLBACK_AUTH_GRANTED"
+                and (
+                  .processResponse.policyResult.reasonMessage
+                  | type == "string" and length > 0
+                )
+              ' \
+            >/dev/null
+
+          trap - ERR
+
+          oc get deployment/customer-rule-mock \
+            deployment/customer-rule-poc \
+            -o custom-columns='NAME:.metadata.name,IMAGE:.spec.template.spec.containers[0].image,READY:.status.readyReplicas'

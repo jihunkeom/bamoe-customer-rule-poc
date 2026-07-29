@@ -1,0 +1,12 @@
+FROM registry.access.redhat.com/ubi9/python-312:latest
+
+USER 0
+WORKDIR /opt/mocks
+COPY mock-server/ /opt/mocks/
+RUN chgrp -R 0 /opt/mocks && chmod -R g=u /opt/mocks
+
+USER 1001
+EXPOSE 8091 8092 8093 8094
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+ENTRYPOINT ["python3", "/opt/mocks/run_all.py"]

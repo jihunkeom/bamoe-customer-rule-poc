@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20240513/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20230324/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="https://kie.org/dmn/extensions/1.0" expressionLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/" namespace="https://example.com/bamoe/poc/case03/v1" id="_E89D4612-000F-4AB0-898F-37420F00A171" name="Case03MmsSendAuthority">
+  <itemDefinition id="_10A2684E-9823-4278-8560-F8715A807F9C" name="Case03PolicyOutcome" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+    <typeRef>string</typeRef>
+    <typeConstraint id="_2B582141-602C-498D-9237-5AC92568BB32" kie:constraintType="enumeration">
+      <text>&quot;AUTH_ERROR&quot;, &quot;AUTHORIZED&quot;, &quot;ORIGIN_NUMBER_INVALID&quot;, &quot;ALTERNATIVE_REQUIRED&quot;, &quot;NORMAL_PROCESSING&quot;</text>
+    </typeConstraint>
+  </itemDefinition>
+  <itemDefinition id="_3F7ADD0A-4B2A-46A1-AFA7-022D3F54644E" name="tCase03PolicyStep" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+    <itemComponent id="_A5CBBEC6-CB02-46F5-B701-BBCE2713B23D" name="status" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+      <typeRef>DecisionStatus</typeRef>
+    </itemComponent>
+    <itemComponent id="_A9FD7F09-069E-43E0-ABAC-7946D9411764" name="reasonCode" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+      <typeRef>string</typeRef>
+    </itemComponent>
+    <itemComponent id="_8A487FF0-94B2-418A-A0E6-162955EC9D9D" name="reasonMessage" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+      <typeRef>string</typeRef>
+    </itemComponent>
+    <itemComponent id="_D9913E63-8AE1-421E-84D8-52A71A383686" name="nextAction" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+      <typeRef>NextAction</typeRef>
+    </itemComponent>
+    <itemComponent id="_25684FA0-2F5E-4820-9C05-634C2F534D14" name="alternativeProcessingRequired" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+      <typeRef>boolean</typeRef>
+    </itemComponent>
+  </itemDefinition>
+  <itemDefinition id="_73910D48-AC5C-4E65-B0A4-035DAE72AC22" name="tCase03Request" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+    <itemComponent id="_FAC6E30D-4122-466C-A362-55435747B2C5" name="csmAux004Result" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+      <typeRef>AuthResult</typeRef>
+    </itemComponent>
+    <itemComponent id="_CF4C2273-DC19-4519-B5EE-33AFDE9188F2" name="mmsOriginNumber" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+      <typeRef>string</typeRef>
+    </itemComponent>
+  </itemDefinition>
+  <itemDefinition id="_831FEBFF-5B78-451A-9BC2-4BA092E4E7CD" name="NextAction" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+    <typeRef>string</typeRef>
+    <typeConstraint id="_9A1ABDE6-E0CA-4DCF-8311-F8A43ADA4ADF" kie:constraintType="enumeration">
+      <text>&quot;RETURN_ERROR&quot;, &quot;CONTINUE&quot;, &quot;FIX_INPUT&quot;, &quot;ALTERNATIVE_PROCESSING&quot;</text>
+    </typeConstraint>
+  </itemDefinition>
+  <itemDefinition id="_1C59DDE5-CAEF-4052-BFAF-D5875EAD2AE8" name="DecisionStatus" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+    <typeRef>string</typeRef>
+    <typeConstraint id="_11D3DE33-A62B-4839-881F-8559390F9E8D" kie:constraintType="enumeration">
+      <text>&quot;ALLOW&quot;, &quot;DENY&quot;, &quot;SYSTEM_ERROR&quot;, &quot;INVALID_INPUT&quot;</text>
+    </typeConstraint>
+  </itemDefinition>
+  <itemDefinition id="_57821202-7269-4745-8512-D77094E229C9" name="AuthResult" isCollection="false" typeLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/">
+    <typeRef>string</typeRef>
+    <typeConstraint id="_94DCDC11-9268-4D73-B609-A16B749A5569" kie:constraintType="enumeration">
+      <text>&quot;GRANTED&quot;, &quot;DENIED&quot;, &quot;ERROR&quot;</text>
+    </typeConstraint>
+  </itemDefinition>
+  <decision name="NormalizedNumber" id="_8DD8C4E9-F1B6-4B84-B718-C42E32E8EA7C">
+    <variable id="_2D3A492F-BB03-45E5-AEF0-783E7B5E64B2" typeRef="string" name="NormalizedNumber" />
+    <informationRequirement id="_0FF28BBD-1B37-4B3D-BFC9-240D645C54AF">
+      <requiredInput href="#_A04CEC74-E485-4530-90CC-4CEDAAEF1FF8" />
+    </informationRequirement>
+    <literalExpression id="_158BE914-64BC-4D4D-9A1B-E0BE49B17446" typeRef="string" label="NormalizedNumber">
+      <text>if Request.csmAux004Result = &quot;DENIED&quot;
+then if Request.mmsOriginNumber = null
+     then null
+     else replace(Request.mmsOriginNumber, &quot;^\\s+|\\s+$&quot;, &quot;&quot;)
+else null</text>
+    </literalExpression>
+  </decision>
+  <decision name="OriginPrefix" id="_F8297E7E-F78E-4305-BB9B-2D3F858BA539">
+    <variable id="_9A97FCF9-0E1E-4D4B-BA94-3ACD9FF6B9F4" typeRef="string" name="OriginPrefix" />
+    <informationRequirement id="_AE93305C-786E-4352-9A54-C4646E5D49AB">
+      <requiredDecision href="#_8DD8C4E9-F1B6-4B84-B718-C42E32E8EA7C" />
+    </informationRequirement>
+    <literalExpression id="_79FB564A-5A4C-4A01-9CDE-5630E0613CBB" typeRef="string" label="OriginPrefix">
+      <text>if NormalizedNumber != null
+   and string length(NormalizedNumber) &gt;= 3
+then substring(NormalizedNumber, 1, 3)
+else null</text>
+    </literalExpression>
+  </decision>
+  <decision name="PolicyOutcome" id="_B8464A4C-DAF5-43D6-A319-37075B3C9094">
+    <variable id="_057A4E8D-267D-4EDA-BCDE-BB593C49F264" typeRef="Case03PolicyOutcome" name="PolicyOutcome" />
+    <informationRequirement id="_0AD7F2B7-18B8-4295-9095-97729F3380EA">
+      <requiredDecision href="#_F8297E7E-F78E-4305-BB9B-2D3F858BA539" />
+    </informationRequirement>
+    <informationRequirement id="_FDD4C17D-C4B2-4043-B1A9-2A63AF1C2D2E">
+      <requiredInput href="#_A04CEC74-E485-4530-90CC-4CEDAAEF1FF8" />
+    </informationRequirement>
+    <decisionTable id="_A4E95F70-1EFA-49C4-A1D1-EC0ED0D930A6" typeRef="Case03PolicyOutcome" hitPolicy="FIRST" label="PolicyOutcome">
+      <input id="_79C58FCA-5EF9-4975-8819-423A946781D0">
+        <inputExpression id="_A1991653-B248-430E-A47D-4CBB4816C43F" typeRef="AuthResult">
+          <text>Request.csmAux004Result</text>
+        </inputExpression>
+      </input>
+      <input id="_44E0D362-8513-4C96-ADD3-584F562183A1">
+        <inputExpression id="_066C8F11-0543-4C2D-9B7B-6D6FE680DD5B" typeRef="string">
+          <text>OriginPrefix</text>
+        </inputExpression>
+      </input>
+      <output id="_56DEE335-F2F6-4B36-8F65-B52A5DE9044F" typeRef="Case03PolicyOutcome" />
+      <annotation name="Annotations" />
+      <rule id="_4C56AF56-B325-442F-986D-5C8D2269714F">
+        <inputEntry id="_9C784C42-D81B-4E31-A503-BBD364A8D951">
+          <text>&quot;ERROR&quot;</text>
+        </inputEntry>
+        <inputEntry id="_5FCD787B-ECD7-4646-94E3-1FCB157065D2">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="_E28FD48E-D2C6-442C-9F17-54480C242237">
+          <text>&quot;AUTH_ERROR&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text>// Your annotations here</text>
+        </annotationEntry>
+      </rule>
+      <rule id="_254B5D1F-B5FA-40C8-9CD2-E7EA2C451D3A">
+        <inputEntry id="_AD28B7E9-A391-4E47-BD19-82C2826A416C">
+          <text>&quot;GRANTED&quot;</text>
+        </inputEntry>
+        <inputEntry id="_A7AE9059-D8E1-4327-B1B1-ED1FF228C608">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="_BAAEE041-C584-489D-99D4-5DF5EFC4882E">
+          <text>&quot;AUTHORIZED&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_2E7B1893-0A60-44C8-AD91-08E8A695DEEF">
+        <inputEntry id="_84F74EBD-AAE4-42B4-9962-66BAC1C25332">
+          <text>&quot;DENIED&quot;</text>
+        </inputEntry>
+        <inputEntry id="_D39AA19B-4AF1-495A-931F-3A9A5935E315">
+          <text>null</text>
+        </inputEntry>
+        <outputEntry id="_97BB6E08-58B0-42B1-8EA1-68721449EA2A">
+          <text>&quot;ORIGIN_NUMBER_INVALID&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_22AA13D1-4C22-434E-8B40-9D20D2D649B7">
+        <inputEntry id="_38B33B95-5B50-44EF-9D79-6062ED70F06F">
+          <text>&quot;DENIED&quot;</text>
+        </inputEntry>
+        <inputEntry id="_1786B665-F6AD-49E3-9CF0-A56CB8A586C9">
+          <text>&quot;010&quot;, &quot;011&quot;, &quot;012&quot;, &quot;016&quot;, &quot;017&quot;, &quot;018&quot;, &quot;019&quot;</text>
+        </inputEntry>
+        <outputEntry id="_537FCE75-7520-496B-A559-B5F959A03ACF">
+          <text>&quot;ALTERNATIVE_REQUIRED&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_62982A96-E43F-44D7-A643-EABC66E82FBF">
+        <inputEntry id="_58E1EBE4-7B5E-4300-926A-65175982A5A8">
+          <text>&quot;DENIED&quot;</text>
+        </inputEntry>
+        <inputEntry id="_1017CEBC-1169-48E5-A6B7-5AF5ED0DCE55">
+          <text>not(null, &quot;010&quot;, &quot;011&quot;, &quot;012&quot;, &quot;016&quot;, &quot;017&quot;, &quot;018&quot;, &quot;019&quot;)</text>
+        </inputEntry>
+        <outputEntry id="_91AFB69A-1D61-4EB7-A0DD-4326F64C964E">
+          <text>&quot;NORMAL_PROCESSING&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision name="PolicyStep" id="_B6225E46-D769-4AA7-98E8-1B8F6F46985A">
+    <variable id="_6154AC3F-5861-4444-B60F-713B80736F84" typeRef="tCase03PolicyStep" name="PolicyStep" />
+    <informationRequirement id="_91F0D716-3308-4AEC-AC9B-59462FFC3C18">
+      <requiredDecision href="#_B8464A4C-DAF5-43D6-A319-37075B3C9094" />
+    </informationRequirement>
+    <decisionTable id="_C6DEBDB8-6749-43DD-B59E-15AC63D8B0BA" typeRef="tCase03PolicyStep" hitPolicy="UNIQUE" label="PolicyStep">
+      <input id="_7299E89F-DB59-4B32-9106-F0E9DC827FCF">
+        <inputExpression id="_79D8829F-76E6-464B-BEDF-98B2FA724624" typeRef="Case03PolicyOutcome">
+          <text>PolicyOutcome</text>
+        </inputExpression>
+      </input>
+      <output id="_9014B1E9-8E8B-45B8-A9B6-60AF95C92E45" name="status" typeRef="DecisionStatus" />
+      <output id="_EB65BC1E-19FC-4A89-A682-5D27FEE104D9" name="reasonCode" typeRef="string" />
+      <output id="_0E463E02-B739-4487-9297-20CA592B8304" name="reasonMessage" typeRef="string" />
+      <output id="_8475077E-0E7D-4A0F-B27C-A6AE81CB3921" name="nextAction" typeRef="NextAction" />
+      <output id="_223B09C1-92FB-4C59-81A9-654C3A310EF9" name="alternativeProcessingRequired" typeRef="boolean" />
+      <annotation name="Annotations" />
+      <rule id="_D3952917-443D-4CB6-976A-14D1EB1E33F5">
+        <inputEntry id="_2699D4A1-49FD-4F6E-A634-3034FEADDC7F">
+          <text>&quot;AUTH_ERROR&quot;</text>
+        </inputEntry>
+        <outputEntry id="_D2616CD1-56E6-4949-B2C0-5326DEC9C41E">
+          <text>&quot;SYSTEM_ERROR&quot;</text>
+        </outputEntry>
+        <outputEntry id="_41B1D732-2D46-470B-9A79-5831CF2D4492">
+          <text>&quot;CSMAUX004_BODY_ERROR&quot;</text>
+        </outputEntry>
+        <outputEntry id="_15C0E2D7-CEF7-4B3E-9F60-A22EEB66AA8D">
+          <text>&quot;CSMAUX004가 업무 오류를 반환했습니다.&quot;</text>
+        </outputEntry>
+        <outputEntry id="_15AB4D23-2905-4C21-AF96-36CECDC3A41F">
+          <text>&quot;RETURN_ERROR&quot;</text>
+        </outputEntry>
+        <outputEntry id="_A951FECB-CD0F-44A0-B894-384B97708931">
+          <text>false</text>
+        </outputEntry>
+        <annotationEntry>
+          <text>// Your annotations here</text>
+        </annotationEntry>
+      </rule>
+      <rule id="_101DAB42-E816-40D6-AE66-451ED19F3DD1">
+        <inputEntry id="_D46ABDF6-528B-4D63-9AAF-BEAC8DD94ABF">
+          <text>&quot;AUTHORIZED&quot;</text>
+        </inputEntry>
+        <outputEntry id="_886C5373-44E5-43B8-AA17-620156B24105">
+          <text>&quot;ALLOW&quot;</text>
+        </outputEntry>
+        <outputEntry id="_56CDBF82-249B-4825-AF02-396F723CBB5B">
+          <text>&quot;PRIMARY_AUTH_GRANTED&quot;</text>
+        </outputEntry>
+        <outputEntry id="_D9DD6A9E-C72C-4B97-BCA9-F76D974CFB8B">
+          <text>&quot;CSMAUX004 권한이 승인되었습니다.&quot;</text>
+        </outputEntry>
+        <outputEntry id="_012B91C5-9B30-43AF-B70C-ACEA5DC11A96">
+          <text>&quot;CONTINUE&quot;</text>
+        </outputEntry>
+        <outputEntry id="_28ACC8BF-1888-4765-B6DF-9B3EE259AB2F">
+          <text>false</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_C6FEAEC9-7E0E-426D-AFE9-CF517F725613">
+        <inputEntry id="_760D5399-31A5-4D93-949B-870C90D24B2E">
+          <text>&quot;ORIGIN_NUMBER_INVALID&quot;</text>
+        </inputEntry>
+        <outputEntry id="_6A850888-A451-4589-B25D-523F3A77F8CE">
+          <text>&quot;INVALID_INPUT&quot;</text>
+        </outputEntry>
+        <outputEntry id="_02CCDA64-AA07-428C-AF28-BCA02D2F83E7">
+          <text>&quot;MMS_ORIGIN_NUMBER_INVALID&quot;</text>
+        </outputEntry>
+        <outputEntry id="_C38FE8E5-5C0B-4477-8F98-E7484433432A">
+          <text>&quot;발신번호의 앞 3자리를 확인할 수 없습니다.&quot;</text>
+        </outputEntry>
+        <outputEntry id="_DFE7BBF7-D1A3-4CCC-A9D0-B6A360FBEBF1">
+          <text>&quot;FIX_INPUT&quot;</text>
+        </outputEntry>
+        <outputEntry id="_C4BB2026-65C9-43D5-A177-3C9D746FBCE9">
+          <text>false</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_3EA52259-A1E6-494D-87E4-433B5CB0F22E">
+        <inputEntry id="_355EA713-FC83-4D03-860F-F2B7A024A74F">
+          <text>&quot;ALTERNATIVE_REQUIRED&quot;</text>
+        </inputEntry>
+        <outputEntry id="_219A9864-86F0-48DB-9D3C-7B504E8314B0">
+          <text>&quot;ALLOW&quot;</text>
+        </outputEntry>
+        <outputEntry id="_6EE103AE-EC4B-41DB-BB3D-73515573AC9D">
+          <text>&quot;ALTERNATIVE_PROCESSING_REQUIRED&quot;</text>
+        </outputEntry>
+        <outputEntry id="_52569A5B-F2B2-45F8-84AB-CD54EEF0201B">
+          <text>&quot;대체 처리 대상 발신번호이므로 대체 처리가 필요합니다.&quot;</text>
+        </outputEntry>
+        <outputEntry id="_D09B2D81-F3F2-41A6-B7F5-B9A2019139ED">
+          <text>&quot;ALTERNATIVE_PROCESSING&quot;</text>
+        </outputEntry>
+        <outputEntry id="_07F01406-B056-4473-8B84-C325E63E0690">
+          <text>true</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_E94565A9-4D19-4188-B98A-D4377410478B">
+        <inputEntry id="_646BD965-D945-42CC-97CD-BAD5DDE96D22">
+          <text>&quot;NORMAL_PROCESSING&quot;</text>
+        </inputEntry>
+        <outputEntry id="_7F87DD53-5379-49CD-A111-E0B695FD937D">
+          <text>&quot;ALLOW&quot;</text>
+        </outputEntry>
+        <outputEntry id="_04DD8B9B-D202-4813-ACFB-4B08CAD20BB0">
+          <text>&quot;NORMAL_PROCESSING&quot;</text>
+        </outputEntry>
+        <outputEntry id="_A99E9C62-4DFA-480E-81FE-299BEBE23827">
+          <text>&quot;대체 처리 대상이 아니므로 정상 처리를 계속합니다.&quot;</text>
+        </outputEntry>
+        <outputEntry id="_025A57F8-E2AC-4BDB-A6F3-3B5DA1D0AAE0">
+          <text>&quot;CONTINUE&quot;</text>
+        </outputEntry>
+        <outputEntry id="_F6EEFE59-95FB-4228-A49C-A8333B13843F">
+          <text>false</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData name="Request" id="_A04CEC74-E485-4530-90CC-4CEDAAEF1FF8">
+    <variable name="Request" id="_469422C4-5FC1-4F6A-8175-E108755BAD64" typeRef="tCase03Request" />
+  </inputData>
+  <decisionService name="Case03MmsSendAuthorityService" id="_A8E3FBC4-D79C-4C7F-8281-8D92CC571DFF">
+    <variable name="Case03MmsSendAuthorityService" id="_604694CC-6EC5-4BA2-B914-FA387442C916" />
+    <outputDecision href="#_B6225E46-D769-4AA7-98E8-1B8F6F46985A" />
+    <encapsulatedDecision href="#_B8464A4C-DAF5-43D6-A319-37075B3C9094" />
+    <encapsulatedDecision href="#_F8297E7E-F78E-4305-BB9B-2D3F858BA539" />
+    <encapsulatedDecision href="#_8DD8C4E9-F1B6-4B84-B718-C42E32E8EA7C" />
+    <inputData href="#_A04CEC74-E485-4530-90CC-4CEDAAEF1FF8" />
+  </decisionService>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_98817A8B-8CEE-4B5D-BE3C-6567E8693EF2" name="Default DRD" useAlternativeInputDataShape="false">
+      <di:extension>
+        <kie:ComponentsWidthsExtension>
+          <kie:ComponentWidths dmnElementRef="_158BE914-64BC-4D4D-9A1B-E0BE49B17446">
+            <kie:width>190</kie:width>
+          </kie:ComponentWidths>
+          <kie:ComponentWidths dmnElementRef="_79FB564A-5A4C-4A01-9CDE-5630E0613CBB">
+            <kie:width>190</kie:width>
+          </kie:ComponentWidths>
+          <kie:ComponentWidths dmnElementRef="_A4E95F70-1EFA-49C4-A1D1-EC0ED0D930A6">
+            <kie:width>60</kie:width>
+            <kie:width>174</kie:width>
+            <kie:width>174</kie:width>
+            <kie:width>153</kie:width>
+            <kie:width>240</kie:width>
+          </kie:ComponentWidths>
+          <kie:ComponentWidths dmnElementRef="_C6DEBDB8-6749-43DD-B59E-15AC63D8B0BA">
+            <kie:width>60</kie:width>
+            <kie:width>153</kie:width>
+            <kie:width>118</kie:width>
+            <kie:width>118</kie:width>
+            <kie:width>118</kie:width>
+            <kie:width>118</kie:width>
+            <kie:width>214</kie:width>
+            <kie:width>240</kie:width>
+          </kie:ComponentWidths>
+        </kie:ComponentsWidthsExtension>
+      </di:extension>
+      <dmndi:DMNShape id="_71E88C06-875F-4A3E-829E-4472B3B66ED5" dmnElementRef="_A04CEC74-E485-4530-90CC-4CEDAAEF1FF8" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="540" y="520" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_EAE5D028-FEC0-411F-B894-F5C13E655BFF" dmnElementRef="_A8E3FBC4-D79C-4C7F-8281-8D92CC571DFF" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="260" y="-60" width="720" height="540" />
+        <dmndi:DMNDecisionServiceDividerLine id="_C9D2D1C2-61EA-495C-B4B1-565E6ED6F032">
+          <di:waypoint x="260" y="100" />
+          <di:waypoint x="580" y="100" />
+        </dmndi:DMNDecisionServiceDividerLine>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_82939444-A0D1-4F2F-9617-7BB1FC954806" dmnElementRef="_8DD8C4E9-F1B6-4B84-B718-C42E32E8EA7C" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="340" y="360" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_7A4A444B-9533-4160-B8EC-D83AFF49B667" dmnElementRef="_F8297E7E-F78E-4305-BB9B-2D3F858BA539" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="380" y="220" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_7A0FAE88-B850-453D-94A9-974D016BFAAB" dmnElementRef="_B8464A4C-DAF5-43D6-A319-37075B3C9094" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="680" y="140" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_C0E47327-3C6D-4004-8133-1C6F7AE1C1DB" dmnElementRef="_B6225E46-D769-4AA7-98E8-1B8F6F46985A" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="540" y="-20" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="_ECC4ECA5-DDED-4236-8441-F5BF1955323D-AUTO-TARGET" dmnElementRef="_0FF28BBD-1B37-4B3D-BFC9-240D645C54AF" sourceElement="_71E88C06-875F-4A3E-829E-4472B3B66ED5" targetElement="_82939444-A0D1-4F2F-9617-7BB1FC954806">
+        <di:waypoint x="620" y="560" />
+        <di:waypoint x="420" y="400" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_A4B58EB6-ABB7-489A-9279-32A29994E668-AUTO-TARGET" dmnElementRef="_AE93305C-786E-4352-9A54-C4646E5D49AB" sourceElement="_82939444-A0D1-4F2F-9617-7BB1FC954806" targetElement="_7A4A444B-9533-4160-B8EC-D83AFF49B667">
+        <di:waypoint x="420" y="400" />
+        <di:waypoint x="460" y="260" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_BF44FDDD-B35B-4C3D-81BC-0E257D04F92A-AUTO-TARGET" dmnElementRef="_0AD7F2B7-18B8-4295-9095-97729F3380EA" sourceElement="_7A4A444B-9533-4160-B8EC-D83AFF49B667" targetElement="_7A0FAE88-B850-453D-94A9-974D016BFAAB">
+        <di:waypoint x="460" y="260" />
+        <di:waypoint x="760" y="180" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_F02BF7B1-6E3A-4FC5-99D0-DCB32F5D4C1F" dmnElementRef="_FDD4C17D-C4B2-4043-B1A9-2A63AF1C2D2E" sourceElement="_71E88C06-875F-4A3E-829E-4472B3B66ED5" targetElement="_7A0FAE88-B850-453D-94A9-974D016BFAAB">
+        <di:waypoint x="620" y="560" />
+        <di:waypoint x="760" y="220" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_9B69E2FB-7CD3-4990-9137-F833679E2937-AUTO-TARGET" dmnElementRef="_91F0D716-3308-4AEC-AC9B-59462FFC3C18" sourceElement="_7A0FAE88-B850-453D-94A9-974D016BFAAB" targetElement="_C0E47327-3C6D-4004-8133-1C6F7AE1C1DB">
+        <di:waypoint x="760" y="180" />
+        <di:waypoint x="620" y="20" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

@@ -1,0 +1,17 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: customer-rule-poc
+  labels:
+    app.kubernetes.io/name: customer-rule-poc
+    app.kubernetes.io/part-of: bamoe-customer-rule-poc
+spec:
+  host: customer-rule-poc.apps.itz-ygi22x.infra01-lb.wdc07.techzone.ibm.com
+  to:
+    kind: Service
+    name: customer-rule-poc
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

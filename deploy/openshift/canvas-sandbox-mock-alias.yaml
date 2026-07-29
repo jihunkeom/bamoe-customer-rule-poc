@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-rule-mock
+  labels:
+    app.kubernetes.io/name: customer-rule-mock
+    app.kubernetes.io/component: sandbox-alias
+    app.kubernetes.io/part-of: bamoe-customer-rule-poc
+spec:
+  type: ExternalName
+  externalName: customer-rule-mock.bamoe-poc.svc.cluster.local
+  ports:
+    - name: case01
+      port: 8091
+      protocol: TCP
+    - name: case02
+      port: 8092
+      protocol: TCP
+    - name: case03
+      port: 8093
+      protocol: TCP
+    - name: case04
+      port: 8094
+      protocol: TCP

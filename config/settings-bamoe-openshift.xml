@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>bamoe-openshift-internal-mirror</id>
+      <name>BAMOE Maven Repository in bamoe-devtools</name>
+      <url>http://bamoe-maven-repository.bamoe-devtools.svc.cluster.local:8080/</url>
+      <mirrorOf>ibm-bamoe-enterprise-maven-repository</mirrorOf>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+      <id>ibm-bamoe-enterprise-maven-repository</id>
+      <repositories>
+        <repository>
+          <id>ibm-bamoe-enterprise-maven-repository</id>
+          <url>http://bamoe-maven-repository.bamoe-devtools.svc.cluster.local:8080/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>ibm-bamoe-enterprise-maven-repository</id>
+          <url>http://bamoe-maven-repository.bamoe-devtools.svc.cluster.local:8080/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>ibm-bamoe-enterprise-maven-repository</activeProfile>
+  </activeProfiles>
+</settings>

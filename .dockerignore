@@ -1,0 +1,6 @@
+*
+!Containerfile
+!target/
+!target/customer-rule-poc.jar
+!mock-server/
+!mock-server/**

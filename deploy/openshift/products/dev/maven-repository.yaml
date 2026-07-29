@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bamoe-maven-repository
+  labels:
+    app.kubernetes.io/name: bamoe-maven-repository
+    app.kubernetes.io/component: artifact-repository
+    app.kubernetes.io/part-of: bamoe-dev-environment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bamoe-maven-repository
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bamoe-maven-repository
+        app.kubernetes.io/component: artifact-repository
+        app.kubernetes.io/part-of: bamoe-dev-environment
+      annotations:
+        productName: "IBM Process Automation Manager Open Edition"
+        productID: "72984f114b54496a8a44be139154a988"
+        productVersion: "9.5.0"
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productChargedContainers: "All"
+        includeSWCUpload: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: maven-repository
+          image: quay.io/bamoe/maven-repository:9.5.0-ibm-0005
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bamoe-maven-repository
+  labels:
+    app.kubernetes.io/name: bamoe-maven-repository
+    app.kubernetes.io/part-of: bamoe-dev-environment
+spec:
+  selector:
+    app.kubernetes.io/name: bamoe-maven-repository
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

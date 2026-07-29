@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-rule-poc
+spec:
+  template:
+    metadata:
+      annotations:
+        productName: "IBM Decision Manager Open Edition"
+        productID: "46b14c7f2f894218a7879b3f6416024f"
+        productVersion: "9.5.0"
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        includeSWCUpload: "true"

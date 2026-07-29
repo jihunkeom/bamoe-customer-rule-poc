@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-rule-mock
+  labels:
+    app.kubernetes.io/name: customer-rule-mock
+    app.kubernetes.io/part-of: bamoe-customer-rule-poc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: customer-rule-mock
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: customer-rule-mock
+        app.kubernetes.io/part-of: bamoe-customer-rule-poc
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr-pull
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: mock
+          image: customer-rule-mock:latest
+          imagePullPolicy: Always
+          ports:
+            - {name: case01, containerPort: 8091}
+            - {name: case02, containerPort: 8092}
+            - {name: case03, containerPort: 8093}
+            - {name: case04, containerPort: 8094}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: case03
+            periodSeconds: 2
+            failureThreshold: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: case03
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: case03
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-rule-mock
+  labels:
+    app.kubernetes.io/name: customer-rule-mock
+    app.kubernetes.io/part-of: bamoe-customer-rule-poc
+spec:
+  selector:
+    app.kubernetes.io/name: customer-rule-mock
+  ports:
+    - {name: case01, port: 8091, targetPort: case01}
+    - {name: case02, port: 8092, targetPort: case02}
+    - {name: case03, port: 8093, targetPort: case03}
+    - {name: case04, port: 8094, targetPort: case04}

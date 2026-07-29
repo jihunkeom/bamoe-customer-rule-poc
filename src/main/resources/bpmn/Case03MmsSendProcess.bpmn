@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" namespace="https://kie.org/bpmn/_32605FEA-460F-4E4C-9B2D-4C788671C782" id="_C8E58399-8802-4ACF-B100-A8FAB6A29317" name="BPMN_FA538E58-F565-452D-A875-CA25717996FE" targetNamespace="https://example.com/bamoe/poc/case03/process/v1">
+  <itemDefinition id="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" structureRef="String" />
+  <itemDefinition id="_1EB38D3C-B8B7-4745-8277-6D0157796108" structureRef="java.util.Map" />
+  <itemDefinition id="_1DD7EF1B-9B9A-4CD2-A2AC-18E7B52A8BDE" structureRef="Boolean" />
+  <process id="Case03MmsSendProcess" isExecutable="true" drools:adHoc="false" name="Case03 MMS Send Process" drools:packageName="org.acme.case03" processType="Public">
+    <property id="_A4C2282D-2C47-4E01-B803-D31D6A11C20E" name="requestId" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>required,readonly,input</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_C14573C6-5FD7-4DE3-A2DF-532587D6730C" name="mmsOriginNumber" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>input,readonly</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_64D7509D-E803-452C-8493-1E5526610C85" name="mockScenario" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>input</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_208A538A-C30C-447B-8D01-91D2A73095B9" name="authRequest" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_5D25E31A-3EBE-4CDC-B810-245A475B8635" name="csmAux004Response" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_75A32168-32F8-49F3-BBB6-5CBB7212E452" name="csmAux004Result" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_24D94048-BA5E-49F1-973C-D5229251A1A7" name="decisionRequest" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_6ECF2BA0-57CD-4A14-BC91-EAC41F9B2539" name="policyStep" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_23F2F242-178F-4972-BDED-A0D7D1C2BC3E" name="decisionStatus" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_FA5A2077-CDBB-472B-B7A1-26CD9BCEFA0C" name="decisionReasonCode" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_7F5B09A2-20A8-4916-919D-7B7DFF34D2EF" name="decisionReasonMessage" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_EE4ED060-BA69-4B82-A69F-60FCC3108456" name="nextAction" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_B4937B5C-F1D5-4AA8-8326-DA1AD254EAA6" name="alternativeProcessingRequired" itemSubjectRef="_1DD7EF1B-9B9A-4CD2-A2AC-18E7B52A8BDE">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_21C854F0-95CA-4E6F-B7BB-483C878DB0F4" name="alternativeRequest" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_F7AF1BB5-8E48-4C89-90A3-05FB231C7F0F" name="alternativeIdempotencyKey" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_292B27CB-484E-4098-A31F-1103ED08E59E" name="alternativeResponse" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_9378A5CC-87B1-498E-BA9F-62EE3C509A27" name="alternativeExecuted" itemSubjectRef="_1DD7EF1B-9B9A-4CD2-A2AC-18E7B52A8BDE">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_1DC52F9B-AB4A-4C43-9996-22392C876CB8" name="processStatus" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_D7AA490D-22AA-4781-91C2-01F21382DD86" name="processReasonCode" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_F3C0ED11-D429-450F-98A9-60B260815F64" name="failureOperation" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>internal</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <property id="_09F23E0B-6A8D-451E-B4C6-4C7663520B38" name="processResponse" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108">
+      <extensionElements>
+        <drools:metaData name="customTags">
+          <drools:metaValue>output</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+    </property>
+    <startEvent id="_2E0E2B4B-25D7-42BD-A52A-F23853C414D5">
+      <outgoing>_D530CE9E-1CE2-4A4C-BDE6-36C7A0AEC897</outgoing>
+    </startEvent>
+    <endEvent id="_EDAAB9EC-8EB6-4E2A-84DA-EFD0B229946D">
+      <incoming>_B860743C-6C32-49EA-B023-268139E2CA1D</incoming>
+    </endEvent>
+    <exclusiveGateway id="_5A66E3FB-576E-4887-A96F-0C4EFFC4228F" gatewayDirection="Diverging" name="decisionRoute" default="_4D0CE36F-F8CA-440E-B601-3613A7775E0A">
+      <incoming>_32CACDEB-3F97-433E-B92B-49A504CBA69F</incoming>
+      <outgoing>_EBA13373-769A-4FA9-8585-B3E8433177C1</outgoing>
+      <outgoing>_D8FAFFF4-9931-4BC9-AEE0-6A35438AF3AB</outgoing>
+      <outgoing>_4D0CE36F-F8CA-440E-B601-3613A7775E0A</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="_95DE54DB-D9BC-4D2C-B5DB-785492D10108" gatewayDirection="Converging" name="successMerge">
+      <incoming>_3FF48584-8566-4BD1-BA80-A19B9B81B616</incoming>
+      <incoming>_D8FAFFF4-9931-4BC9-AEE0-6A35438AF3AB</incoming>
+      <outgoing>_CAF50857-B4B5-4CF2-95E0-770AE4FB558D</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="_58202CBC-982C-438D-BE83-A851B3EC75A3" gatewayDirection="Converging">
+      <incoming>_A5F58B3B-58F5-461B-B34D-A3323468BF93</incoming>
+      <incoming>_25C5BDDD-2ADA-431B-8B79-B6404EA5073F</incoming>
+      <outgoing>_B860743C-6C32-49EA-B023-268139E2CA1D</outgoing>
+    </exclusiveGateway>
+    <task id="_79E40BAD-90D2-42BC-BD31-FFD8C53B4D0D" name="callCsmAux004" drools:taskName="Rest">
+      <incoming>_447F6DEF-71C2-4F64-9A22-0C9E0FD9C775</incoming>
+      <outgoing>_A45D4890-89EC-4B9E-96EB-96822DC35F23</outgoing>
+      <ioSpecification id="_21F4F88E-8F41-4049-B3A7-93528E13A6FF">
+        <dataInput id="_96C51F74-E5F2-40E2-8DAF-5A61C930E02F" name="Method" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_E058DE70-B0BA-46B4-811D-257ADB7BA3F5" name="Url" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_9E4A5D4C-4077-4A38-AA9C-87285E4EF7EC" name="AccessTokenAcquisitionStrategy" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_D220F9E2-8CF5-4F10-BDD9-70A898133A1B" name="RequestTimeout" drools:dtype="Integer" />
+        <dataInput id="_6C5C3E19-103A-41F2-A550-1AEFD4A83441" name="HEADER_Accept" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_76B0E47C-E81E-4B94-AF29-AA2C8091DDCD" name="authRequest" drools:dtype="java.util.Map" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108" />
+        <dataInput id="_8079D482-5204-4E81-B91F-ECAE06343D07" name="ContentData" drools:dtype="Object" />
+        <dataOutput name="Result" id="_431A6315-9A13-4759-8411-007AB609427F" drools:dtype="java.util.Map" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108" />
+        <inputSet id="_07F55C8B-779A-4018-8833-01B46AD277D8">
+          <dataInputRefs>_96C51F74-E5F2-40E2-8DAF-5A61C930E02F</dataInputRefs>
+          <dataInputRefs>_E058DE70-B0BA-46B4-811D-257ADB7BA3F5</dataInputRefs>
+          <dataInputRefs>_9E4A5D4C-4077-4A38-AA9C-87285E4EF7EC</dataInputRefs>
+          <dataInputRefs>_D220F9E2-8CF5-4F10-BDD9-70A898133A1B</dataInputRefs>
+          <dataInputRefs>_6C5C3E19-103A-41F2-A550-1AEFD4A83441</dataInputRefs>
+          <dataInputRefs>_76B0E47C-E81E-4B94-AF29-AA2C8091DDCD</dataInputRefs>
+          <dataInputRefs>_8079D482-5204-4E81-B91F-ECAE06343D07</dataInputRefs>
+        </inputSet>
+        <outputSet id="_720F56EE-65A7-46C3-8CD6-EE7B9E20D2BB">
+          <dataOutputRefs>_431A6315-9A13-4759-8411-007AB609427F</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation id="_83B319E9-BDEA-4263-A577-9A439EC8A4CE">
+        <targetRef>_96C51F74-E5F2-40E2-8DAF-5A61C930E02F</targetRef>
+        <assignment id="_DCFDC415-30DC-4BCB-A815-E6C9D5C93B69">
+          <from id="_30A23A81-3729-4546-A5FE-3C550BCB3635" xsi:type="tFormalExpression">POST</from>
+          <to id="_3019A8A1-14F2-4BC8-97B3-6A7BC9D95DE6">_96C51F74-E5F2-40E2-8DAF-5A61C930E02F</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_664AA7B7-0E28-46B2-8643-7FD3252BBD0D">
+        <targetRef>_E058DE70-B0BA-46B4-811D-257ADB7BA3F5</targetRef>
+        <assignment id="_51795C36-2E5D-474D-AB26-6618826CBC04">
+          <from id="_DC9C89F8-96B0-4292-BD58-03442C9BD661" xsi:type="tFormalExpression">http://customer-rule-mock:8093/mock/auth/csmaux004</from>
+          <to id="_7F9C785D-63E4-4243-8389-712FC87B1DF4">_E058DE70-B0BA-46B4-811D-257ADB7BA3F5</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_D3F33B56-412F-4B60-B699-6857AD86D618">
+        <targetRef>_9E4A5D4C-4077-4A38-AA9C-87285E4EF7EC</targetRef>
+        <assignment id="_6ED22BEB-1F0D-49F6-8292-6BC2B83C6BD0">
+          <from id="_3736ED0D-64A7-47AD-9235-413BA72DDFFF" xsi:type="tFormalExpression">none</from>
+          <to id="_C9799EE5-C398-4DA7-9830-DDACC43FE82C">_9E4A5D4C-4077-4A38-AA9C-87285E4EF7EC</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_EE1D2688-3DD3-492E-902F-AAE1F1A24DFD">
+        <targetRef>_D220F9E2-8CF5-4F10-BDD9-70A898133A1B</targetRef>
+        <assignment id="_DCA5DEF3-42F2-430D-8F7A-53EE5F1F4732">
+          <from id="_4CA7584F-974D-4CA8-AD8C-F75B8854B5F0" xsi:type="tFormalExpression">2000</from>
+          <to id="_E0DB5842-2DC0-4F38-BE01-F5039B361BD0">_D220F9E2-8CF5-4F10-BDD9-70A898133A1B</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_F1D4D4A9-FDE6-41AE-A1CD-7F2362A2EF22">
+        <targetRef>_6C5C3E19-103A-41F2-A550-1AEFD4A83441</targetRef>
+        <assignment id="_B877D889-3FED-43C7-A748-B4F79522DCBA">
+          <from id="_07308BF5-207E-4DC2-963C-C64E5449DAC9" xsi:type="tFormalExpression">application/json</from>
+          <to id="_2F94C5AE-35B1-4CC8-B059-165DBA63F19B">_6C5C3E19-103A-41F2-A550-1AEFD4A83441</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_E437DEBB-2BEA-44D1-9FC1-824C78B41285">
+        <sourceRef>_208A538A-C30C-447B-8D01-91D2A73095B9</sourceRef>
+        <targetRef>_76B0E47C-E81E-4B94-AF29-AA2C8091DDCD</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="_506B8FDD-64B3-439C-B0F2-6E8111692E0A">
+        <targetRef>_8079D482-5204-4E81-B91F-ECAE06343D07</targetRef>
+        <assignment id="_3C5F9A65-25B6-4A74-B91A-91F68906918D">
+          <from id="_8AC5BE6A-E6C1-4FC7-B2BC-CC1C184A12FB" xsi:type="tFormalExpression"> #{authRequest}</from>
+          <to id="_376F571C-7E6C-4811-BDDD-9DBBAF98C126">_8079D482-5204-4E81-B91F-ECAE06343D07</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataOutputAssociation id="_3C9A3CBC-6A76-463F-BFCC-CF2D683EEEC6">
+        <sourceRef>_431A6315-9A13-4759-8411-007AB609427F</sourceRef>
+        <targetRef>_5D25E31A-3EBE-4CDC-B810-245A475B8635</targetRef>
+      </dataOutputAssociation>
+    </task>
+    <task id="_D094EF82-AFAD-4416-9467-85CAD667C54D" name="performAlternativeProcessing" drools:taskName="Rest">
+      <incoming>_EB9FED30-735D-4576-99A4-AC77983396A4</incoming>
+      <outgoing>_AB5DFE93-42BF-485E-A066-06EADACF366F</outgoing>
+      <ioSpecification id="_37CC5A0E-0E17-48CE-BA73-4AA71E221723">
+        <dataInput id="_9649AD52-EB84-4854-9284-C631D3AC9D3B" name="Method" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_1ABAA046-F918-465D-81D9-5A1DEB636FF8" name="Url" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_55AC0FEB-1BBB-40E5-8E0D-20A86F165D91" name="AccessTokenAcquisitionStrategy" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_1BE760B9-F3FA-49B3-8400-128450ADD1A4" name="RequestTimeout" drools:dtype="Integer" />
+        <dataInput id="_F8A9BF3D-2B56-4F05-87B8-732DBE5D1D49" name="alternativeRequest" drools:dtype="java.util.Map" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108" />
+        <dataInput id="_BD6A08BE-A913-42E9-975C-CED6C715D145" name="alternativeIdempotencyKey" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_F8513D71-EB5C-401F-8535-CD1EF8E9CF42" name="HEADER_Accept" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_C615FC07-D40E-4BDE-8A59-5796746CD1FB" name="HEADER_IdempotencyKey" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_DAB2631E-DDA1-417C-BEB0-E80389D08147" name="ContentData" drools:dtype="Object" />
+        <dataOutput name="Result" id="_04B00CFD-8581-4719-879A-8D4ADCCBB074" drools:dtype="java.util.Map" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108" />
+        <inputSet id="_8063F012-C0A3-4F71-AEB4-7CACB79611EF">
+          <dataInputRefs>_9649AD52-EB84-4854-9284-C631D3AC9D3B</dataInputRefs>
+          <dataInputRefs>_1ABAA046-F918-465D-81D9-5A1DEB636FF8</dataInputRefs>
+          <dataInputRefs>_55AC0FEB-1BBB-40E5-8E0D-20A86F165D91</dataInputRefs>
+          <dataInputRefs>_1BE760B9-F3FA-49B3-8400-128450ADD1A4</dataInputRefs>
+          <dataInputRefs>_F8A9BF3D-2B56-4F05-87B8-732DBE5D1D49</dataInputRefs>
+          <dataInputRefs>_BD6A08BE-A913-42E9-975C-CED6C715D145</dataInputRefs>
+          <dataInputRefs>_F8513D71-EB5C-401F-8535-CD1EF8E9CF42</dataInputRefs>
+          <dataInputRefs>_C615FC07-D40E-4BDE-8A59-5796746CD1FB</dataInputRefs>
+          <dataInputRefs>_DAB2631E-DDA1-417C-BEB0-E80389D08147</dataInputRefs>
+        </inputSet>
+        <outputSet id="_74DEC272-2D46-4C95-9C27-D8FAC47946C3">
+          <dataOutputRefs>_04B00CFD-8581-4719-879A-8D4ADCCBB074</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation id="_9A44D5F9-B959-42BE-B668-D9D5F5DF70C9">
+        <targetRef>_9649AD52-EB84-4854-9284-C631D3AC9D3B</targetRef>
+        <assignment id="_AF7A14D6-132C-4FE1-B3A7-21ABC2C15D37">
+          <from id="_A8DA131B-F060-4125-82B4-9823D7298194" xsi:type="tFormalExpression">POST</from>
+          <to id="_518787AA-7373-40FA-94EF-8D7331EDD49D">_9649AD52-EB84-4854-9284-C631D3AC9D3B</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_7DFDEF75-6903-432B-BD1B-D5E4785B41E8">
+        <targetRef>_1ABAA046-F918-465D-81D9-5A1DEB636FF8</targetRef>
+        <assignment id="_8A7E59F1-15E7-429F-8661-9BF59AF5065A">
+          <from id="_FDE733A5-EF2F-4CC4-9356-1F47B5FB10B0" xsi:type="tFormalExpression">http://customer-rule-mock:8093/mock/alternative-processing</from>
+          <to id="_F98580AB-2230-4969-9217-B63C7A272407">_1ABAA046-F918-465D-81D9-5A1DEB636FF8</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_B66167A7-DE1E-46DC-9368-75FAD564FC83">
+        <targetRef>_55AC0FEB-1BBB-40E5-8E0D-20A86F165D91</targetRef>
+        <assignment id="_4F08F799-7A87-4376-B88A-8DE01D217B62">
+          <from id="_9F773267-208F-4454-8486-97904CD3448C" xsi:type="tFormalExpression">none</from>
+          <to id="_D810BB56-7F65-4CE5-91F3-EF1C75A71482">_55AC0FEB-1BBB-40E5-8E0D-20A86F165D91</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_0F6E27D0-87AD-4FC8-95A1-E92C758DA69E">
+        <targetRef>_1BE760B9-F3FA-49B3-8400-128450ADD1A4</targetRef>
+        <assignment id="_4D708598-916F-4762-B770-17DFC40856FD">
+          <from id="_8D407A9E-0412-464E-85D0-284AC0B026EB" xsi:type="tFormalExpression">2000</from>
+          <to id="_99AF88E8-9A6C-4EF3-BA81-DE880EE16873">_1BE760B9-F3FA-49B3-8400-128450ADD1A4</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_5D291B5B-B12F-48A9-A8EF-56AA920FA234">
+        <sourceRef>_21C854F0-95CA-4E6F-B7BB-483C878DB0F4</sourceRef>
+        <targetRef>_F8A9BF3D-2B56-4F05-87B8-732DBE5D1D49</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="_B8A69F19-3717-451F-8B80-E28005DA9BC5">
+        <sourceRef>_F7AF1BB5-8E48-4C89-90A3-05FB231C7F0F</sourceRef>
+        <targetRef>_BD6A08BE-A913-42E9-975C-CED6C715D145</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="_F8282AB3-C05D-498E-9841-53727682C8FA">
+        <targetRef>_F8513D71-EB5C-401F-8535-CD1EF8E9CF42</targetRef>
+        <assignment id="_17B44E7E-BB26-45C2-A8E7-81BCE1A4A514">
+          <from id="_4AC66B2D-4F48-461A-AEC5-599F9E9800A5" xsi:type="tFormalExpression">application/json</from>
+          <to id="_7160B0EC-CF84-44E9-B1F0-7367BBF62BDF">_F8513D71-EB5C-401F-8535-CD1EF8E9CF42</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_39A6AD7B-7FEC-4FF2-A85B-A8B8704D28A7">
+        <targetRef>_C615FC07-D40E-4BDE-8A59-5796746CD1FB</targetRef>
+        <assignment id="_DA366E55-A396-44AD-A4BB-917D979EDAA6">
+          <from id="_D0DCB92F-EC71-4D7B-B3A7-D7B0EF49CAB5" xsi:type="tFormalExpression"> #{alternativeIdempotencyKey}</from>
+          <to id="_06689843-F85F-426D-9961-BDDCED2FA111">_C615FC07-D40E-4BDE-8A59-5796746CD1FB</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_BF64EC0F-FF31-457D-B8C1-96B04706F551">
+        <targetRef>_DAB2631E-DDA1-417C-BEB0-E80389D08147</targetRef>
+        <assignment id="_9DD06475-481E-4143-94FD-C387A05A72F7">
+          <from id="_0C11FE3B-17A5-4581-85E5-6528A485A93A" xsi:type="tFormalExpression"> #{alternativeRequest}</from>
+          <to id="_99D145EA-C942-4145-BBE4-2E0E835BBA88">_DAB2631E-DDA1-417C-BEB0-E80389D08147</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataOutputAssociation id="_9BCB37A8-F0D5-4D05-B56C-1EC760939480">
+        <sourceRef>_04B00CFD-8581-4719-879A-8D4ADCCBB074</sourceRef>
+        <targetRef>_292B27CB-484E-4098-A31F-1103ED08E59E</targetRef>
+      </dataOutputAssociation>
+    </task>
+    <scriptTask id="_3B64679F-83D1-4029-9854-0FFCE16AD383" name="initializeRequest" scriptFormat="http://www.java.com/java">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_D530CE9E-1CE2-4A4C-BDE6-36C7A0AEC897</incoming>
+      <outgoing>_447F6DEF-71C2-4F64-9A22-0C9E0FD9C775</outgoing>
+      <script>String incomingRequestId =
+    (String) kcontext.getVariable(&quot;requestId&quot;);
+String scenario =
+    (String) kcontext.getVariable(&quot;mockScenario&quot;);
+
+if (incomingRequestId == null || incomingRequestId.isBlank()
+        || scenario == null || scenario.isBlank()) {
+    throw new IllegalArgumentException(
+        &quot;requestId and mockScenario are required&quot;);
+}
+
+java.util.Map authPayload = new java.util.LinkedHashMap();
+authPayload.put(&quot;requestId&quot;, incomingRequestId);
+authPayload.put(&quot;mockScenario&quot;, scenario);
+
+kcontext.setVariable(&quot;authRequest&quot;, authPayload);
+kcontext.setVariable(&quot;csmAux004Response&quot;, null);
+kcontext.setVariable(&quot;csmAux004Result&quot;, null);
+kcontext.setVariable(&quot;decisionRequest&quot;, null);
+kcontext.setVariable(&quot;policyStep&quot;, null);
+kcontext.setVariable(&quot;alternativeProcessingRequired&quot;, false);
+kcontext.setVariable(&quot;alternativeExecuted&quot;, false);
+kcontext.setVariable(&quot;processStatus&quot;, &quot;RUNNING&quot;);
+kcontext.setVariable(&quot;processReasonCode&quot;, null);
+kcontext.setVariable(&quot;failureOperation&quot;, null);</script>
+    </scriptTask>
+    <scriptTask id="_025C36A6-176C-4128-B475-3CFBE7900587" name="mapCsmAux004Response" scriptFormat="http://www.java.com/java">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_A45D4890-89EC-4B9E-96EB-96822DC35F23</incoming>
+      <outgoing>_B965DF1E-CA0F-4FE1-9F10-26F9244F5F73</outgoing>
+      <script>java.util.Map response =
+    (java.util.Map) kcontext.getVariable(&quot;csmAux004Response&quot;);
+Object raw = response == null ? null : response.get(&quot;result&quot;);
+String result = raw == null ? null : raw.toString();
+
+if (result == null
+        || !java.util.List.of(
+            &quot;GRANTED&quot;, &quot;DENIED&quot;, &quot;ERROR&quot;).contains(result)) {
+    throw new IllegalStateException(
+        &quot;Invalid CSMAUX004 response: &quot; + response);
+}
+
+java.util.Map request = new java.util.LinkedHashMap();
+request.put(&quot;csmAux004Result&quot;, result);
+request.put(
+    &quot;mmsOriginNumber&quot;,
+    kcontext.getVariable(&quot;mmsOriginNumber&quot;));
+
+kcontext.setVariable(&quot;csmAux004Result&quot;, result);
+kcontext.setVariable(&quot;decisionRequest&quot;, request);</script>
+    </scriptTask>
+    <scriptTask id="_06AE9DA5-6C93-4570-9D24-5D7D1D282BCF" name="readPolicyStep" scriptFormat="http://www.java.com/java">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_1C2CD67A-B0D9-4005-909D-9ED0F28079C3</incoming>
+      <outgoing>_32CACDEB-3F97-433E-B92B-49A504CBA69F</outgoing>
+      <script>java.util.Map result =
+    (java.util.Map) kcontext.getVariable(&quot;policyStep&quot;);
+if (result == null
+        || result.get(&quot;status&quot;) == null
+        || result.get(&quot;reasonCode&quot;) == null
+        || result.get(&quot;reasonMessage&quot;) == null
+        || result.get(&quot;nextAction&quot;) == null
+        || result.get(&quot;alternativeProcessingRequired&quot;) == null) {
+    throw new IllegalStateException(
+        &quot;Case03 PolicyStep mapping is missing: &quot; + result);
+}
+
+String status = result.get(&quot;status&quot;).toString();
+String action = result.get(&quot;nextAction&quot;).toString();
+boolean alternative =
+    java.lang.Boolean.TRUE.equals(
+        result.get(&quot;alternativeProcessingRequired&quot;));
+
+boolean validContract =
+    (&quot;ALLOW&quot;.equals(status)
+        &amp;&amp; &quot;ALTERNATIVE_PROCESSING&quot;.equals(action)
+        &amp;&amp; alternative)
+    || (&quot;ALLOW&quot;.equals(status)
+        &amp;&amp; &quot;CONTINUE&quot;.equals(action)
+        &amp;&amp; !alternative)
+    || (&quot;SYSTEM_ERROR&quot;.equals(status)
+        &amp;&amp; &quot;RETURN_ERROR&quot;.equals(action)
+        &amp;&amp; !alternative)
+    || (&quot;INVALID_INPUT&quot;.equals(status)
+        &amp;&amp; &quot;FIX_INPUT&quot;.equals(action)
+        &amp;&amp; !alternative);
+
+if (!validContract) {
+    throw new IllegalStateException(
+        &quot;Inconsistent Case03 PolicyStep tuple: &quot; + result);
+}
+
+kcontext.setVariable(
+    &quot;decisionStatus&quot;,
+    status);
+kcontext.setVariable(
+    &quot;decisionReasonCode&quot;,
+    String.valueOf(result.get(&quot;reasonCode&quot;)));
+kcontext.setVariable(
+    &quot;decisionReasonMessage&quot;,
+    String.valueOf(result.get(&quot;reasonMessage&quot;)));
+kcontext.setVariable(
+    &quot;nextAction&quot;,
+    action);
+kcontext.setVariable(
+    &quot;alternativeProcessingRequired&quot;,
+    alternative);</script>
+    </scriptTask>
+    <scriptTask id="_D92B172C-AE31-4A24-88DF-5D33E34F6150" name="buildAlternativeRequest" scriptFormat="http://www.java.com/java">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_EBA13373-769A-4FA9-8585-B3E8433177C1</incoming>
+      <outgoing>_EB9FED30-735D-4576-99A4-AC77983396A4</outgoing>
+      <script>String currentRequestId =
+    (String) kcontext.getVariable(&quot;requestId&quot;);
+String key = &quot;case03-alt:&quot; + currentRequestId;
+
+java.util.Map request = new java.util.LinkedHashMap();
+request.put(&quot;requestId&quot;, currentRequestId);
+request.put(
+    &quot;mockScenario&quot;,
+    kcontext.getVariable(&quot;mockScenario&quot;));
+request.put(
+    &quot;mmsOriginNumber&quot;,
+    kcontext.getVariable(&quot;mmsOriginNumber&quot;));
+
+kcontext.setVariable(&quot;alternativeIdempotencyKey&quot;, key);
+kcontext.setVariable(&quot;alternativeRequest&quot;, request);</script>
+    </scriptTask>
+    <scriptTask id="_44EAD4B0-9F2F-40F8-AEC1-1F86C442824B" name="validateAlternativeResponse" scriptFormat="http://www.java.com/java">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_AB5DFE93-42BF-485E-A066-06EADACF366F</incoming>
+      <outgoing>_3FF48584-8566-4BD1-BA80-A19B9B81B616</outgoing>
+      <script>java.util.Map response =
+    (java.util.Map) kcontext.getVariable(&quot;alternativeResponse&quot;);
+String result = response == null || response.get(&quot;result&quot;) == null
+    ? null
+    : response.get(&quot;result&quot;).toString();
+String operationId =
+    response == null || response.get(&quot;operationId&quot;) == null
+    ? null
+    : response.get(&quot;operationId&quot;).toString();
+
+if (!&quot;PROCESSED&quot;.equals(result)
+        || operationId == null
+        || operationId.isBlank()) {
+    throw new IllegalStateException(
+        &quot;Invalid alternative response: &quot; + response);
+}
+
+kcontext.setVariable(&quot;alternativeExecuted&quot;, true);</script>
+    </scriptTask>
+    <scriptTask id="_1BE25675-F458-4D2D-B6AB-9B0C7B64298E" name="markCompleted" scriptFormat="http://www.java.com/java">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_CAF50857-B4B5-4CF2-95E0-770AE4FB558D</incoming>
+      <outgoing>_25C5BDDD-2ADA-431B-8B79-B6404EA5073F</outgoing>
+      <script>boolean alternative =
+    java.lang.Boolean.TRUE.equals(
+        kcontext.getVariable(&quot;alternativeProcessingRequired&quot;));
+kcontext.setVariable(&quot;processStatus&quot;, &quot;COMPLETED&quot;);
+kcontext.setVariable(
+    &quot;processReasonCode&quot;,
+    alternative
+        ? &quot;ALTERNATIVE_PROCESSING_COMPLETED&quot;
+        : &quot;NORMAL_PROCESSING_COMPLETED&quot;);
+
+java.util.Map policy = new java.util.LinkedHashMap(
+    (java.util.Map) kcontext.getVariable(&quot;policyStep&quot;));
+java.util.Map response = new java.util.LinkedHashMap();
+response.put(&quot;requestId&quot;, kcontext.getVariable(&quot;requestId&quot;));
+response.put(&quot;executionState&quot;, &quot;COMPLETED&quot;);
+response.put(&quot;policyResult&quot;, policy);
+response.put(&quot;alternativeExecuted&quot;,
+    kcontext.getVariable(&quot;alternativeExecuted&quot;));
+response.put(&quot;processReasonCode&quot;,
+    kcontext.getVariable(&quot;processReasonCode&quot;));
+kcontext.setVariable(&quot;processResponse&quot;, response);</script>
+    </scriptTask>
+    <scriptTask id="_BE9B70F8-047F-4D72-828A-0CEEA1791491" name="markDecisionStopped" scriptFormat="http://www.java.com/java">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_4D0CE36F-F8CA-440E-B601-3613A7775E0A</incoming>
+      <outgoing>_A5F58B3B-58F5-461B-B34D-A3323468BF93</outgoing>
+      <script>kcontext.setVariable(&quot;processStatus&quot;, &quot;DECISION_STOPPED&quot;);
+kcontext.setVariable(
+    &quot;processReasonCode&quot;,
+    kcontext.getVariable(&quot;decisionReasonCode&quot;));
+
+java.util.Map policy = new java.util.LinkedHashMap(
+    (java.util.Map) kcontext.getVariable(&quot;policyStep&quot;));
+java.util.Map response = new java.util.LinkedHashMap();
+response.put(&quot;requestId&quot;, kcontext.getVariable(&quot;requestId&quot;));
+response.put(&quot;executionState&quot;, &quot;COMPLETED&quot;);
+response.put(&quot;policyResult&quot;, policy);
+response.put(&quot;alternativeExecuted&quot;, false);
+response.put(&quot;processReasonCode&quot;,
+    kcontext.getVariable(&quot;processReasonCode&quot;));
+kcontext.setVariable(&quot;processResponse&quot;, response);</script>
+    </scriptTask>
+    <businessRuleTask id="_19A5C47F-7668-42EC-BF03-42789C9F4FFB" name="evaluateCase03" implementation="http://www.jboss.org/drools/dmn">
+      <extensionElements>
+        <drools:metaData name="customAsync">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+        <drools:metaData name="customAutoStart">
+          <drools:metaValue>false</drools:metaValue>
+        </drools:metaData>
+      </extensionElements>
+      <incoming>_B965DF1E-CA0F-4FE1-9F10-26F9244F5F73</incoming>
+      <outgoing>_1C2CD67A-B0D9-4005-909D-9ED0F28079C3</outgoing>
+      <ioSpecification id="_DE7EE24A-B292-4E08-AB5E-4771A1BDCA52">
+        <dataInput id="_72AC0F02-CCE7-4C16-BB96-101DD702D773" name="model" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_631D4835-F75B-4664-804F-4DC12D79300F" name="fileName" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_918721F7-6C47-47FF-9984-66E872666715" name="namespace" drools:dtype="String" itemSubjectRef="_1C7888AF-EC21-4431-BE4B-D1E6F772D0F0" />
+        <dataInput id="_97EE2765-0447-4095-8002-F0F029C913B0" name="Request" drools:dtype="java.util.Map" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108" />
+        <dataOutput name="PolicyStep" id="_E8074DEB-7E54-44C8-84EA-456E8F6C32D4" drools:dtype="java.util.Map" itemSubjectRef="_1EB38D3C-B8B7-4745-8277-6D0157796108" />
+        <inputSet id="_FEAAE6F2-D709-4351-AA8E-F7F2E6635E86">
+          <dataInputRefs>_72AC0F02-CCE7-4C16-BB96-101DD702D773</dataInputRefs>
+          <dataInputRefs>_631D4835-F75B-4664-804F-4DC12D79300F</dataInputRefs>
+          <dataInputRefs>_918721F7-6C47-47FF-9984-66E872666715</dataInputRefs>
+          <dataInputRefs>_97EE2765-0447-4095-8002-F0F029C913B0</dataInputRefs>
+        </inputSet>
+        <outputSet id="_2AA10AFE-A276-464B-B13A-FBBC962A5B33">
+          <dataOutputRefs>_E8074DEB-7E54-44C8-84EA-456E8F6C32D4</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation id="_8A9C2157-E55C-4733-A9F3-242C37BEFBF1">
+        <targetRef>_72AC0F02-CCE7-4C16-BB96-101DD702D773</targetRef>
+        <assignment id="_80726AE4-8BB2-497B-8EEA-19CDCB405CCA">
+          <from id="_860570EA-177C-4F5C-ACEC-9C84B2AF9F0A" xsi:type="tFormalExpression">Case03MmsSendAuthority</from>
+          <to id="_390545D3-332D-44B7-83D4-307CAA41C9A5">_72AC0F02-CCE7-4C16-BB96-101DD702D773</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_C21A0C58-9EFF-49DF-907B-C4225A11C339">
+        <targetRef>_631D4835-F75B-4664-804F-4DC12D79300F</targetRef>
+        <assignment id="_2ABB1E97-390C-48D1-8900-1BCC11FD811A">
+          <from id="_B563B5DC-D66F-4DD4-96AF-DCA5D0102A2B" xsi:type="tFormalExpression">../dmn/Case03MmsSendAuthority.dmn</from>
+          <to id="_45072213-787A-4C64-A891-8DC65C2D06E6">_631D4835-F75B-4664-804F-4DC12D79300F</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_04D3A83C-26D1-48C1-A7A6-92D76B3C123B">
+        <targetRef>_918721F7-6C47-47FF-9984-66E872666715</targetRef>
+        <assignment id="_537A45F6-9935-4B4E-A64A-E92D9B50040C">
+          <from id="_6F36CC68-F2CE-4756-88F8-CD1C3EE50FAC" xsi:type="tFormalExpression">https://example.com/bamoe/poc/case03/v1</from>
+          <to id="_967B5F40-D625-4622-B359-B8BCE06B6E2D">_918721F7-6C47-47FF-9984-66E872666715</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="_25AE81B3-FE8D-4D0B-A9A5-27A5359AF6EF">
+        <sourceRef>_24D94048-BA5E-49F1-973C-D5229251A1A7</sourceRef>
+        <targetRef>_97EE2765-0447-4095-8002-F0F029C913B0</targetRef>
+      </dataInputAssociation>
+      <dataOutputAssociation id="_F6443B29-6418-4A74-A59E-727F7F9EECD3">
+        <sourceRef>_E8074DEB-7E54-44C8-84EA-456E8F6C32D4</sourceRef>
+        <targetRef>_6ECF2BA0-57CD-4A14-BC91-EAC41F9B2539</targetRef>
+      </dataOutputAssociation>
+    </businessRuleTask>
+    <sequenceFlow id="_D530CE9E-1CE2-4A4C-BDE6-36C7A0AEC897" sourceRef="_2E0E2B4B-25D7-42BD-A52A-F23853C414D5" targetRef="_3B64679F-83D1-4029-9854-0FFCE16AD383" />
+    <sequenceFlow id="_447F6DEF-71C2-4F64-9A22-0C9E0FD9C775" sourceRef="_3B64679F-83D1-4029-9854-0FFCE16AD383" targetRef="_79E40BAD-90D2-42BC-BD31-FFD8C53B4D0D" />
+    <sequenceFlow id="_A45D4890-89EC-4B9E-96EB-96822DC35F23" sourceRef="_79E40BAD-90D2-42BC-BD31-FFD8C53B4D0D" targetRef="_025C36A6-176C-4128-B475-3CFBE7900587" />
+    <sequenceFlow id="_B965DF1E-CA0F-4FE1-9F10-26F9244F5F73" sourceRef="_025C36A6-176C-4128-B475-3CFBE7900587" targetRef="_19A5C47F-7668-42EC-BF03-42789C9F4FFB" />
+    <sequenceFlow id="_1C2CD67A-B0D9-4005-909D-9ED0F28079C3" sourceRef="_19A5C47F-7668-42EC-BF03-42789C9F4FFB" targetRef="_06AE9DA5-6C93-4570-9D24-5D7D1D282BCF" />
+    <sequenceFlow id="_32CACDEB-3F97-433E-B92B-49A504CBA69F" sourceRef="_06AE9DA5-6C93-4570-9D24-5D7D1D282BCF" targetRef="_5A66E3FB-576E-4887-A96F-0C4EFFC4228F" />
+    <sequenceFlow id="_EBA13373-769A-4FA9-8585-B3E8433177C1" sourceRef="_5A66E3FB-576E-4887-A96F-0C4EFFC4228F" targetRef="_D92B172C-AE31-4A24-88DF-5D33E34F6150">
+      <conditionExpression id="_9D51DD47-3E60-44CB-A061-66AA913A35FF">return &quot;ALLOW&quot;.equals(decisionStatus)
+    &amp;&amp; &quot;ALTERNATIVE_PROCESSING&quot;.equals(nextAction)
+    &amp;&amp; alternativeProcessingRequired == true;</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_EB9FED30-735D-4576-99A4-AC77983396A4" sourceRef="_D92B172C-AE31-4A24-88DF-5D33E34F6150" targetRef="_D094EF82-AFAD-4416-9467-85CAD667C54D" />
+    <sequenceFlow id="_AB5DFE93-42BF-485E-A066-06EADACF366F" sourceRef="_D094EF82-AFAD-4416-9467-85CAD667C54D" targetRef="_44EAD4B0-9F2F-40F8-AEC1-1F86C442824B" />
+    <sequenceFlow id="_3FF48584-8566-4BD1-BA80-A19B9B81B616" sourceRef="_44EAD4B0-9F2F-40F8-AEC1-1F86C442824B" targetRef="_95DE54DB-D9BC-4D2C-B5DB-785492D10108" />
+    <sequenceFlow id="_D8FAFFF4-9931-4BC9-AEE0-6A35438AF3AB" sourceRef="_5A66E3FB-576E-4887-A96F-0C4EFFC4228F" targetRef="_95DE54DB-D9BC-4D2C-B5DB-785492D10108">
+      <conditionExpression id="_E5D7F3F9-C81E-4B26-AABD-1391438D0CA1">return &quot;ALLOW&quot;.equals(decisionStatus)
+    &amp;&amp; &quot;CONTINUE&quot;.equals(nextAction)
+    &amp;&amp; alternativeProcessingRequired == false;</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_CAF50857-B4B5-4CF2-95E0-770AE4FB558D" sourceRef="_95DE54DB-D9BC-4D2C-B5DB-785492D10108" targetRef="_1BE25675-F458-4D2D-B6AB-9B0C7B64298E" />
+    <sequenceFlow id="_4D0CE36F-F8CA-440E-B601-3613A7775E0A" sourceRef="_5A66E3FB-576E-4887-A96F-0C4EFFC4228F" targetRef="_BE9B70F8-047F-4D72-828A-0CEEA1791491" />
+    <sequenceFlow id="_A5F58B3B-58F5-461B-B34D-A3323468BF93" sourceRef="_BE9B70F8-047F-4D72-828A-0CEEA1791491" targetRef="_58202CBC-982C-438D-BE83-A851B3EC75A3" />
+    <sequenceFlow id="_25C5BDDD-2ADA-431B-8B79-B6404EA5073F" sourceRef="_1BE25675-F458-4D2D-B6AB-9B0C7B64298E" targetRef="_58202CBC-982C-438D-BE83-A851B3EC75A3" />
+    <sequenceFlow id="_B860743C-6C32-49EA-B023-268139E2CA1D" sourceRef="_58202CBC-982C-438D-BE83-A851B3EC75A3" targetRef="_EDAAB9EC-8EB6-4E2A-84DA-EFD0B229946D" />
+  </process>
+  <bpmndi:BPMNDiagram id="_34054D2A-B831-4515-B9FD-28204E59B53A">
+    <bpmndi:BPMNPlane id="_80EFC0CB-F3C8-4A09-A13E-D21B4A15879B">
+      <bpmndi:BPMNShape id="_F579521C-C40F-4421-9953-A910FEC13C86" bpmnElement="_2E0E2B4B-25D7-42BD-A52A-F23853C414D5">
+        <dc:Bounds x="20" y="-60" width="60" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_33701EA8-6FA0-47BF-8C4D-CC79E0B16D6B" bpmnElement="_3B64679F-83D1-4029-9854-0FFCE16AD383">
+        <dc:Bounds x="100" y="-80" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_E79FFFCF-E568-4355-A8FB-D9C14469BA8B" bpmnElement="_79E40BAD-90D2-42BC-BD31-FFD8C53B4D0D">
+        <dc:Bounds x="320" y="-80" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_6B82DCAC-527D-4A2D-B33B-FEF381304256" bpmnElement="_025C36A6-176C-4128-B475-3CFBE7900587">
+        <dc:Bounds x="540" y="-80" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_20938EC7-5682-454E-A8CA-9371128B6AB8" bpmnElement="_19A5C47F-7668-42EC-BF03-42789C9F4FFB">
+        <dc:Bounds x="760" y="-80" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_954ACF7B-1BF7-44E6-B048-960E56EA452C" bpmnElement="_06AE9DA5-6C93-4570-9D24-5D7D1D282BCF">
+        <dc:Bounds x="980" y="-80" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_7669263D-8B6B-4817-8337-998E4F6B9E0F" bpmnElement="_5A66E3FB-576E-4887-A96F-0C4EFFC4228F">
+        <dc:Bounds x="1200" y="-60" width="60" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_72B67A43-066F-4002-8B46-42507DEFA6CA" bpmnElement="_D92B172C-AE31-4A24-88DF-5D33E34F6150">
+        <dc:Bounds x="1300" y="-180" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_A206429D-B8CF-4C27-B0F8-19B52E45713B" bpmnElement="_D094EF82-AFAD-4416-9467-85CAD667C54D">
+        <dc:Bounds x="1520" y="-180" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_5F35F58E-8B94-491E-8CED-D4A238355E3D" bpmnElement="_44EAD4B0-9F2F-40F8-AEC1-1F86C442824B">
+        <dc:Bounds x="1740" y="-180" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_0D57153A-C809-440C-B376-77FAE9984B93" bpmnElement="_95DE54DB-D9BC-4D2C-B5DB-785492D10108">
+        <dc:Bounds x="1960" y="-60" width="60" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_CA7468BF-9001-4BAA-84D9-5AC48762814E" bpmnElement="_1BE25675-F458-4D2D-B6AB-9B0C7B64298E">
+        <dc:Bounds x="2080" y="-80" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_B07760E7-045A-4B7F-9CBC-2FA819441F32" bpmnElement="_BE9B70F8-047F-4D72-828A-0CEEA1791491">
+        <dc:Bounds x="2080" y="80" width="180" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_8C539A4E-D4A5-4F5C-871B-4DA56058425A" bpmnElement="_58202CBC-982C-438D-BE83-A851B3EC75A3">
+        <dc:Bounds x="2340" y="20" width="60" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_8827FBDA-6E64-4D76-944A-119410A89B4E" bpmnElement="_EDAAB9EC-8EB6-4E2A-84DA-EFD0B229946D">
+        <dc:Bounds x="2480" y="20" width="60" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_1BF2904C-FE68-4C31-A000-AD95886EDE4A-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_D530CE9E-1CE2-4A4C-BDE6-36C7A0AEC897" sourceElement="_F579521C-C40F-4421-9953-A910FEC13C86" targetElement="_33701EA8-6FA0-47BF-8C4D-CC79E0B16D6B">
+        <di:waypoint x="50" y="-30" />
+        <di:waypoint x="190" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_07B2DE2E-D3FA-41F7-BD29-0728D66A7B6C-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_447F6DEF-71C2-4F64-9A22-0C9E0FD9C775" sourceElement="_33701EA8-6FA0-47BF-8C4D-CC79E0B16D6B" targetElement="_E79FFFCF-E568-4355-A8FB-D9C14469BA8B">
+        <di:waypoint x="190" y="-30" />
+        <di:waypoint x="410" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_800E66D4-8C70-41AB-941C-10511E237E3A-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_A45D4890-89EC-4B9E-96EB-96822DC35F23" sourceElement="_E79FFFCF-E568-4355-A8FB-D9C14469BA8B" targetElement="_6B82DCAC-527D-4A2D-B33B-FEF381304256">
+        <di:waypoint x="410" y="-30" />
+        <di:waypoint x="630" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_3E7CF80F-115E-4830-BB66-E299C3E06DF4-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_B965DF1E-CA0F-4FE1-9F10-26F9244F5F73" sourceElement="_6B82DCAC-527D-4A2D-B33B-FEF381304256" targetElement="_20938EC7-5682-454E-A8CA-9371128B6AB8">
+        <di:waypoint x="630" y="-30" />
+        <di:waypoint x="850" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_613F7FDF-8DB8-4AF5-A20D-BA4BEB504A3B-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_1C2CD67A-B0D9-4005-909D-9ED0F28079C3" sourceElement="_20938EC7-5682-454E-A8CA-9371128B6AB8" targetElement="_954ACF7B-1BF7-44E6-B048-960E56EA452C">
+        <di:waypoint x="850" y="-30" />
+        <di:waypoint x="1070" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_822ED17C-0949-42A9-BAF7-4EDF824A76E5-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_32CACDEB-3F97-433E-B92B-49A504CBA69F" sourceElement="_954ACF7B-1BF7-44E6-B048-960E56EA452C" targetElement="_7669263D-8B6B-4817-8337-998E4F6B9E0F">
+        <di:waypoint x="1070" y="-30" />
+        <di:waypoint x="1230" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_A49F03A0-59A4-4BC7-8CB0-0BAFB89394B3-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_EBA13373-769A-4FA9-8585-B3E8433177C1" sourceElement="_7669263D-8B6B-4817-8337-998E4F6B9E0F" targetElement="_72B67A43-066F-4002-8B46-42507DEFA6CA">
+        <di:waypoint x="1230" y="-30" />
+        <di:waypoint x="1390" y="-130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_6DC624E4-B669-4934-BFDE-48CB0304158D-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_EB9FED30-735D-4576-99A4-AC77983396A4" sourceElement="_72B67A43-066F-4002-8B46-42507DEFA6CA" targetElement="_A206429D-B8CF-4C27-B0F8-19B52E45713B">
+        <di:waypoint x="1390" y="-130" />
+        <di:waypoint x="1610" y="-130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_AC28CA9E-CE40-4D47-9A7E-31FE862D3AAD-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_AB5DFE93-42BF-485E-A066-06EADACF366F" sourceElement="_A206429D-B8CF-4C27-B0F8-19B52E45713B" targetElement="_5F35F58E-8B94-491E-8CED-D4A238355E3D">
+        <di:waypoint x="1610" y="-130" />
+        <di:waypoint x="1830" y="-130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_0B25D167-DE80-4CB5-BD26-B174F3A5A25B-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_3FF48584-8566-4BD1-BA80-A19B9B81B616" sourceElement="_5F35F58E-8B94-491E-8CED-D4A238355E3D" targetElement="_0D57153A-C809-440C-B376-77FAE9984B93">
+        <di:waypoint x="1830" y="-130" />
+        <di:waypoint x="1990" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_1E0051C9-85C0-4D23-94BD-B249C94002A7" bpmnElement="_D8FAFFF4-9931-4BC9-AEE0-6A35438AF3AB" sourceElement="_7669263D-8B6B-4817-8337-998E4F6B9E0F" targetElement="_0D57153A-C809-440C-B376-77FAE9984B93">
+        <di:waypoint x="1230" y="-30" />
+        <di:waypoint x="1960" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_2890B557-0D7B-4F4A-B981-0817A5E4483A-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_CAF50857-B4B5-4CF2-95E0-770AE4FB558D" sourceElement="_0D57153A-C809-440C-B376-77FAE9984B93" targetElement="_CA7468BF-9001-4BAA-84D9-5AC48762814E">
+        <di:waypoint x="1990" y="-30" />
+        <di:waypoint x="2170" y="-30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_28FD2CB7-F56E-4358-A8B0-9B9BB48E1041-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_4D0CE36F-F8CA-440E-B601-3613A7775E0A" sourceElement="_7669263D-8B6B-4817-8337-998E4F6B9E0F" targetElement="_B07760E7-045A-4B7F-9CBC-2FA819441F32">
+        <di:waypoint x="1230" y="-30" />
+        <di:waypoint x="2170" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_873535DA-2768-4BD9-91BC-240B213A1F92-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_A5F58B3B-58F5-461B-B34D-A3323468BF93" sourceElement="_B07760E7-045A-4B7F-9CBC-2FA819441F32" targetElement="_8C539A4E-D4A5-4F5C-871B-4DA56058425A">
+        <di:waypoint x="2170" y="130" />
+        <di:waypoint x="2370" y="50" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_E32FE018-C3C6-466B-BA6F-91DE3FB53899" bpmnElement="_25C5BDDD-2ADA-431B-8B79-B6404EA5073F" sourceElement="_CA7468BF-9001-4BAA-84D9-5AC48762814E" targetElement="_8C539A4E-D4A5-4F5C-871B-4DA56058425A">
+        <di:waypoint x="2170" y="-30" />
+        <di:waypoint x="2340" y="50" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_EC23E3A8-3E5F-4711-BC46-E1B0A7E29F44-AUTO-SOURCE-AUTO-TARGET" bpmnElement="_B860743C-6C32-49EA-B023-268139E2CA1D" sourceElement="_8C539A4E-D4A5-4F5C-871B-4DA56058425A" targetElement="_8827FBDA-6E64-4D76-944A-119410A89B4E">
+        <di:waypoint x="2370" y="50" />
+        <di:waypoint x="2510" y="50" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

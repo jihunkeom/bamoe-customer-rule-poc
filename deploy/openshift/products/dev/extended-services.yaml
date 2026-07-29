@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bamoe-extended-services
+  labels:
+    app.kubernetes.io/name: bamoe-extended-services
+    app.kubernetes.io/component: model-services
+    app.kubernetes.io/part-of: bamoe-dev-environment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bamoe-extended-services
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bamoe-extended-services
+        app.kubernetes.io/component: model-services
+        app.kubernetes.io/part-of: bamoe-dev-environment
+      annotations:
+        productName: "IBM Process Automation Manager Open Edition"
+        productID: "72984f114b54496a8a44be139154a988"
+        productVersion: "9.5.0"
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productChargedContainers: "All"
+        includeSWCUpload: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: extended-services
+          image: quay.io/bamoe/extended-services:9.5.0-ibm-0005
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 21345
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bamoe-extended-services
+  labels:
+    app.kubernetes.io/name: bamoe-extended-services
+    app.kubernetes.io/part-of: bamoe-dev-environment
+spec:
+  selector:
+    app.kubernetes.io/name: bamoe-extended-services
+  ports:
+    - name: http
+      port: 21345
+      targetPort: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: bamoe-extended-services
+  labels:
+    app.kubernetes.io/name: bamoe-extended-services
+    app.kubernetes.io/part-of: bamoe-dev-environment
+spec:
+  host: bamoe-extended-services.apps.itz-ygi22x.infra01-lb.wdc07.techzone.ibm.com
+  to:
+    kind: Service
+    name: bamoe-extended-services
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

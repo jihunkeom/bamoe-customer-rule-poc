@@ -1,0 +1,7 @@
+.DS_Store
+.m2/
+target/
+.vscode/settings.json
+config/settings-bamoe-container.xml
+*.swidtag
+/BAMOE_POC_CASE.pdf
