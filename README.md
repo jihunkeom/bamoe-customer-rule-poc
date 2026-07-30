@@ -1,11 +1,28 @@
 # BAMOE Customer Rule PoC
 
+[jihunkeom/bamoe-customer-rule-poc](https://github.com/jihunkeom/bamoe-customer-rule-poc)는
 IBM BAMOE 9.5로 고객 Rule Case01~04를 구현한 PoC입니다.
 
-- BPMN: 외부 API 호출과 실행 순서 제어
-- DMN: 수집한 데이터를 이용한 업무 정책 판단
-- Mock API: 고객 연동 정보 확정 전 테스트 데이터 제공
-- GitHub: BPMN, DMN, 테스트와 배포 파일의 기준 원본
+## 구현 방식
+
+이번 구현은 모든 Fact가 호출 전에 완성되어 있다고 가정하는 DMN-only 방식이
+아닙니다. 고객이 전달한 슈도 코드에는 조건에 따른 API·DB 조회와 후속 호출이
+포함되어 있으므로 BPMN과 DMN을 함께 사용했습니다.
+
+- BPMN: 외부 API·DB 호출 순서, 조건 분기, 후속 처리 제어
+- DMN: BPMN이 수집한 Fact를 이용한 업무 정책 판단과 다음 Action 결정
+- Mock API: 고객 연동 계약이 확정되기 전 API·DB 응답 대체
+
+```text
+요청
+  → BPMN이 필요한 Fact 조회
+  → DMN이 현재 Fact로 정책 평가
+  → DMN의 nextAction에 따라 BPMN이 후속 API 호출 또는 종료
+  → 최종 정책 결과 반환
+```
+
+`mockScenario`는 PoC에서 외부 시스템의 응답을 선택하기 위한 테스트 전용
+필드입니다. 실제 연동 시에는 Mock API를 고객 API·DB 연동으로 교체합니다.
 
 Case05~06은 현재 저장소와 배포 범위에 포함되지 않습니다.
 
@@ -18,39 +35,70 @@ Case05~06은 현재 저장소와 배포 범위에 포함되지 않습니다.
 | 03 | MMS 발신 권한과 대체 처리 | `POST /Case03MmsSendProcess` | `ALLOW / ALTERNATIVE_PROCESSING_REQUIRED` |
 | 04 | 1차 거절 시 대체 권한 확인 | `POST /Case04FallbackProcess` | `ALLOW / FALLBACK_AUTH_GRANTED` |
 
+주요 디렉터리:
+
 ```text
 src/main/resources/bpmn/   BPMN Process
 src/main/resources/dmn/    DMN Decision
 src/test/resources/scesim/ DMN Scenario Test
 mock-server/                외부 연동 Mock API
+deploy/openshift/           OpenShift 배포 manifest
 ```
 
-## OCP 구성
+## OpenShift 구성
 
-| OCP project | 배포 대상 |
+| OCP Project | 역할 |
 |---|---|
 | `bamoe-devtools` | Canvas, Extended Services, CORS Proxy, Maven Repository |
-| `bamoe-runtime` | Case01~04 Business Service, Management Console, MCP Server |
+| `bamoe-runtime` | Case01~04 Business Service, Management Console, MCP Server, Mock DNS alias |
 | `mock-api` | Case01~04 Mock REST API |
 
-배포 후 접근 주소:
+접근 주소:
 
 - Canvas: `https://bamoe-canvas.apps.itz-ygi22x.infra01-lb.wdc07.techzone.ibm.com`
 - Business Service: `https://customer-rule-poc.apps.itz-ygi22x.infra01-lb.wdc07.techzone.ibm.com`
 - Management Console: `https://bamoe-management-console.apps.itz-ygi22x.infra01-lb.wdc07.techzone.ibm.com`
-- MCP Server: OCP 내부 `bamoe-mcp-server.bamoe-runtime.svc.cluster.local:8080`
+- MCP Server: OCP 내부 `http://bamoe-mcp-server.bamoe-runtime.svc.cluster.local:8080/mcp`
 - Mock API: OCP 내부 `customer-rule-mock.mock-api.svc.cluster.local:8091~8094`
 
-Business Service는 `bamoe-runtime`의 DNS alias를 통해 `mock-api`의 Mock
-Service를 호출합니다. MCP와 Mock API에는 외부 Route를 만들지 않습니다.
+Business Service는 `bamoe-runtime`의 `customer-rule-mock` DNS alias를 통해
+`mock-api` Project의 Mock Service를 호출합니다. MCP와 Mock API에는 외부 Route를
+만들지 않았습니다.
 
-## 호출 예시
+## 배포 이미지
+
+현재 OCP에 배포된 PoC 애플리케이션:
+
+```text
+ghcr.io/jihunkeom/customer-rule-poc:sha-a20f8c9573a1f65ec7f19f8655ae9fa2b33e7016@sha256:3935984eb78508c2a454bee379c32b115a052b26a372c856e5fea7c9ff11ff19
+```
+
+현재 OCP에 배포된 Mock API:
+
+```text
+ghcr.io/jihunkeom/customer-rule-mock:sha-a20f8c9573a1f65ec7f19f8655ae9fa2b33e7016@sha256:710b706cfff255feca98b5847e89cff6448e27a713099398c5205b3282496014
+```
+
+BAMOE 제품 이미지:
+
+| 구성요소 | 이미지 |
+|---|---|
+| Canvas | `quay.io/bamoe/canvas:9.5.0-ibm-0005` |
+| Extended Services | `quay.io/bamoe/extended-services:9.5.0-ibm-0005` |
+| CORS Proxy | `quay.io/bamoe/cors-proxy:9.5.0-ibm-0005` |
+| Maven Repository | `quay.io/bamoe/maven-repository:9.5.0-ibm-0005` |
+| Management Console | `quay.io/bamoe/management-console:9.5.0-ibm-0005` |
+| MCP Server | `quay.io/bamoe/mcp-server:9.5.0-ibm-0005` |
+
+## Case01~04 호출 예시
+
+공통 Business Service URL을 설정합니다.
 
 ```bash
 export APP_BASE_URL='https://customer-rule-poc.apps.itz-ygi22x.infra01-lb.wdc07.techzone.ibm.com'
 ```
 
-### Case01
+### Case01 — 서비스 상태 변경
 
 서비스 분류, ORDAUX227 권한, 프로모션 가입 건수를 순차적으로 확인합니다.
 
@@ -68,9 +116,10 @@ curl --fail-with-body -sS \
   | jq '.processResponse'
 ```
 
-기대: `COMPLETED`, 평가 3회, `ALLOW / STATUS_CHANGE_ALLOWED / CONTINUE`.
+기대 결과: `COMPLETED`, 평가 3회,
+`ALLOW / STATUS_CHANGE_ALLOWED / CONTINUE`.
 
-### Case02
+### Case02 — 유선 서비스 명의변경
 
 서비스 유형을 조회하고 대상인 경우에만 ORDAU1520 권한을 확인합니다.
 
@@ -87,11 +136,13 @@ curl --fail-with-body -sS \
   | jq '.processResponse'
 ```
 
-기대: `COMPLETED`, 평가 2회, `ALLOW / NAME_CHANGE_ALLOWED / CONTINUE`.
+기대 결과: `COMPLETED`, 평가 2회,
+`ALLOW / NAME_CHANGE_ALLOWED / CONTINUE`.
 
-### Case03
+### Case03 — MMS 발신 권한과 대체 처리
 
-권한이 거절되고 발신번호가 대상이면 DMN이 대체 처리 호출을 지시합니다.
+권한이 거절되고 발신번호가 대상이면 DMN이 대체 처리를 지시하고 BPMN이 후속
+API를 호출합니다.
 
 ```bash
 curl --fail-with-body -sS \
@@ -106,12 +157,12 @@ curl --fail-with-body -sS \
   | jq '.processResponse'
 ```
 
-기대: `COMPLETED`, `ALLOW / ALTERNATIVE_PROCESSING_REQUIRED`,
+기대 결과: `COMPLETED`, `ALLOW / ALTERNATIVE_PROCESSING_REQUIRED`,
 `alternativeExecuted=true`.
 
-### Case04
+### Case04 — 1차 거절 시 대체 권한 확인
 
-CSMAUX004가 거절된 경우에만 DMN의 지시에 따라 CSMAUX005를 호출합니다.
+CSMAUX004가 거절된 경우에만 DMN 지시에 따라 CSMAUX005를 호출합니다.
 
 ```bash
 curl --fail-with-body -sS \
@@ -126,9 +177,10 @@ curl --fail-with-body -sS \
   | jq '.processResponse'
 ```
 
-기대: `COMPLETED`, 평가 2회, `ALLOW / FALLBACK_AUTH_GRANTED / CONTINUE`.
+기대 결과: `COMPLETED`, 평가 2회,
+`ALLOW / FALLBACK_AUTH_GRANTED / CONTINUE`.
 
-## 주요 Mock scenario
+## 주요 Mock Scenario
 
 | Case | `mockScenario` | 의미 |
 |---|---|---|
@@ -137,59 +189,9 @@ curl --fail-with-body -sS \
 | 03 | `GRANTED`, `DENIED_NORMAL`, `DENIED_ALT_SUCCESS`, `AUTH_BODY_ERROR` | 권한 승인, 일반 처리, 대체 처리, 업무 오류 |
 | 04 | `PRIMARY_GRANTED`, `PRIMARY_BODY_ERROR`, `FALLBACK_GRANTED`, `FALLBACK_DENIED`, `FALLBACK_BODY_ERROR` | 1차 종료 또는 2차 권한 분기 |
 
-외부 연동의 기술 실패를 확인하는 `*-http-500` 또는 `*_HTTP_500` scenario도
+외부 연동의 기술 실패를 확인하는 `*-http-500` 또는 `*_HTTP_500` Scenario도
 포함되어 있습니다. 기술 실패는 정상 `policyResult`가 아닌 Process 오류 경로를
 검증합니다.
 
-## 빌드 및 테스트
-
-Java 21과 BAMOE Maven Repository가 준비된 상태에서 실행합니다.
-
-```bash
-mvn \
-  -s config/settings-bamoe-ci.xml \
-  -B -ntp clean verify
-```
-
-이 명령은 빌드와 SCESIM 테스트를 함께 실행합니다.
-
-## CI/CD
-
-`main` push 시 GitHub Actions가 다음 작업을 수행합니다.
-
-1. Maven 및 SCESIM 검증
-2. Business Service와 Mock 이미지 빌드
-3. GHCR에 commit SHA 기반 이미지 게시
-4. `OCP_AUTO_DEPLOY=true`이면 기존 OCP Deployment 이미지 갱신
-5. Rollout과 Case04 smoke test 검증
-6. 실패 시 이전 이미지로 롤백
-
-```text
-ghcr.io/jihunkeom/customer-rule-poc
-ghcr.io/jihunkeom/customer-rule-mock
-```
-
-최초 OCP 리소스 생성과 인프라 매니페스트 변경은 수동으로 적용합니다. GitHub
-Actions는 기존 앱과 Mock Deployment의 이미지 변경 권한만 가집니다.
-
-## 협업 원칙
-
-- Git 저장소가 모델과 배포 파일의 기준 원본입니다.
-- Canvas에서 수정한 BPMN/DMN도 검토 후 Git에 반영합니다.
-- 실행 중인 Runtime에서 모델을 역으로 가져오는 방식은 사용하지 않습니다.
-- Mock API는 고객 연동 정보가 확정되면 실제 API로 교체합니다.
-- Management Console의 장기 실행 이력 기능은 현재 비영속 PoC 구성에서 제한될 수 있습니다.
-
-## 배포 확인
-
-```bash
-oc get deploy,pod,svc,route -n bamoe-devtools
-oc get deploy,pod,svc,route -n bamoe-runtime
-oc get deploy,pod,svc,route -n mock-api
-```
-
-```bash
-curl --fail-with-body -sS \
-  "${APP_BASE_URL}/v3/api-docs" \
-  | jq '.paths | keys'
-```
+> 현재 외부 Route에는 별도 사용자 인증이 없습니다. 실제 고객정보 대신 합성
+> 테스트 데이터만 사용해야 합니다.
