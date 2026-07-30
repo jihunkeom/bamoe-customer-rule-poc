@@ -124,8 +124,7 @@ jobs:
         with:
           openshift_server_url: ${{ vars.OPENSHIFT_SERVER }}
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          certificate_authority_data: ${{ secrets.OPENSHIFT_CA_DATA }}
-          namespace: ${{ vars.OPENSHIFT_NAMESPACE }}
+          namespace: ${{ vars.OPENSHIFT_RUNTIME_NAMESPACE }}
 
       - name: Deploy immutable images
         shell: bash
@@ -135,12 +134,16 @@ jobs:
           APP_DIGEST: ${{ needs.build.outputs.app_digest }}
           MOCK_DIGEST: ${{ needs.build.outputs.mock_digest }}
           APP_BASE_URL: ${{ vars.APP_BASE_URL }}
+          RUNTIME_NS: ${{ vars.OPENSHIFT_RUNTIME_NAMESPACE }}
+          MOCK_NS: ${{ vars.OPENSHIFT_MOCK_NAMESPACE }}
         run: |
           set -Eeuo pipefail
 
           : "${APP_DIGEST:?Application digest is missing}"
           : "${MOCK_DIGEST:?Mock digest is missing}"
           : "${APP_BASE_URL:?APP_BASE_URL is missing}"
+          : "${RUNTIME_NS:?OPENSHIFT_RUNTIME_NAMESPACE is missing}"
+          : "${MOCK_NS:?OPENSHIFT_MOCK_NAMESPACE is missing}"
 
           if [[ ! "$APP_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]] \
             || [[ ! "$MOCK_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
@@ -152,12 +155,14 @@ jobs:
           mock_ref="${MOCK_IMAGE}:sha-${GITHUB_SHA}@${MOCK_DIGEST}"
 
           previous_app="$(
-            oc get deployment/customer-rule-poc \
+            oc -n "$RUNTIME_NS" \
+              get deployment/customer-rule-poc \
               -o jsonpath='{.spec.template.spec.containers[?(@.name=="application")].image}'
           )"
 
           previous_mock="$(
-            oc get deployment/customer-rule-mock \
+            oc -n "$MOCK_NS" \
+              get deployment/customer-rule-mock \
               -o jsonpath='{.spec.template.spec.containers[?(@.name=="mock")].image}'
           )"
 
@@ -199,33 +204,45 @@ jobs:
 
             echo "::warning::Deployment failed; restoring previous images"
 
-            oc set image deployment/customer-rule-poc \
-              "application=${previous_app}" || true
+            oc -n "$RUNTIME_NS" \
+              set image deployment/customer-rule-poc \
+              "application=${previous_app}" \
+              || true
 
-            oc set image deployment/customer-rule-mock \
-              "mock=${previous_mock}" || true
+            oc -n "$MOCK_NS" \
+              set image deployment/customer-rule-mock \
+              "mock=${previous_mock}" \
+              || true
 
-            oc rollout status deployment/customer-rule-mock \
-              --timeout=3m || true
+            oc -n "$MOCK_NS" \
+              rollout status deployment/customer-rule-mock \
+              --timeout=3m \
+              || true
 
-            oc rollout status deployment/customer-rule-poc \
-              --timeout=5m || true
+            oc -n "$RUNTIME_NS" \
+              rollout status deployment/customer-rule-poc \
+              --timeout=5m \
+              || true
 
             exit "$status"
           }
 
           trap rollback ERR
 
-          oc set image deployment/customer-rule-mock \
+          oc -n "$MOCK_NS" \
+            set image deployment/customer-rule-mock \
             "mock=${mock_ref}"
 
-          oc rollout status deployment/customer-rule-mock \
+          oc -n "$MOCK_NS" \
+            rollout status deployment/customer-rule-mock \
             --timeout=3m
 
-          oc set image deployment/customer-rule-poc \
+          oc -n "$RUNTIME_NS" \
+            set image deployment/customer-rule-poc \
             "application=${app_ref}"
 
-          oc rollout status deployment/customer-rule-poc \
+          oc -n "$RUNTIME_NS" \
+            rollout status deployment/customer-rule-poc \
             --timeout=5m
 
           curl \
@@ -239,6 +256,7 @@ jobs:
             | jq -e '.paths | length > 0' >/dev/null
 
           case04_request_id="GHA-C04-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
           case04_payload="$(
             jq -n \
               --arg requestId "$case04_request_id" \
@@ -279,6 +297,10 @@ jobs:
 
           trap - ERR
 
-          oc get deployment/customer-rule-mock \
-            deployment/customer-rule-poc \
+          oc -n "$MOCK_NS" \
+            get deployment/customer-rule-mock \
+            -o custom-columns='NAME:.metadata.name,IMAGE:.spec.template.spec.containers[0].image,READY:.status.readyReplicas'
+
+          oc -n "$RUNTIME_NS" \
+            get deployment/customer-rule-poc \
             -o custom-columns='NAME:.metadata.name,IMAGE:.spec.template.spec.containers[0].image,READY:.status.readyReplicas'

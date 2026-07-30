@@ -39,7 +39,7 @@ spec:
               containerPort: 8080
           env:
             - name: MCP_SERVER_OPENAPI_URLS
-              value: "http://customer-rule-poc.bamoe-poc.svc.cluster.local:8080/v3/api-docs"
+              value: "http://customer-rule-poc:8080/v3/api-docs"
             - name: MCP_SERVER_SECURITY_ENABLED
               value: "false"
             - name: MCP_SERVER_SECURITY_AUTH_PERMISSION
@@ -72,7 +72,8 @@ spec:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
             capabilities:
-              drop: ["ALL"]
+              drop:
+                - ALL
 ---
 apiVersion: v1
 kind: Service

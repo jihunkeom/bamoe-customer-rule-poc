@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: github-actions-deployer
+  namespace: bamoe-runtime
   labels:
     app.kubernetes.io/part-of: bamoe-customer-rule-poc
 ---
@@ -9,6 +10,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: github-actions-deployer
+  namespace: bamoe-runtime
   labels:
     app.kubernetes.io/part-of: bamoe-customer-rule-poc
 rules:
@@ -19,6 +21,38 @@ rules:
     resources: ["deployments"]
     resourceNames:
       - customer-rule-poc
+    verbs: ["patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: github-actions-deployer
+  namespace: bamoe-runtime
+  labels:
+    app.kubernetes.io/part-of: bamoe-customer-rule-poc
+subjects:
+  - kind: ServiceAccount
+    name: github-actions-deployer
+    namespace: bamoe-runtime
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: github-actions-deployer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: github-actions-deployer
+  namespace: mock-api
+  labels:
+    app.kubernetes.io/part-of: bamoe-customer-rule-poc
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    resourceNames:
       - customer-rule-mock
     verbs: ["patch"]
 ---
@@ -26,12 +60,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: github-actions-deployer
+  namespace: mock-api
   labels:
     app.kubernetes.io/part-of: bamoe-customer-rule-poc
 subjects:
   - kind: ServiceAccount
     name: github-actions-deployer
-    namespace: bamoe-poc
+    namespace: bamoe-runtime
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

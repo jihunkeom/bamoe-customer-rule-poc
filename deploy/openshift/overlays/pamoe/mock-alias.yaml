@@ -4,11 +4,11 @@ metadata:
   name: customer-rule-mock
   labels:
     app.kubernetes.io/name: customer-rule-mock
-    app.kubernetes.io/component: sandbox-alias
+    app.kubernetes.io/component: runtime-mock-alias
     app.kubernetes.io/part-of: bamoe-customer-rule-poc
 spec:
   type: ExternalName
-  externalName: customer-rule-mock.bamoe-poc.svc.cluster.local
+  externalName: customer-rule-mock.mock-api.svc.cluster.local
   ports:
     - name: case01
       port: 8091
